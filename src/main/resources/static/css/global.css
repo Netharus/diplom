@@ -1,0 +1,9 @@
+:root {
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --success-color: #5FB878;
+    --danger-color: #FFA500;
+    --background-color: #D3D3D3;
+    --regular-color: #4F97D0;
+    --dark-regular-color: #1E3A5F;
+}
