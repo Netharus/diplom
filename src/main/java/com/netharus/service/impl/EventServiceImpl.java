@@ -20,6 +20,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> getLastFiveEvents(Long userId) {
         Pageable pageable = PageRequest.of(0, 5, Sort.by(Sort.Order.desc("dateTime")));
-        return eventRepository.findAll(pageable).getContent();
+        return eventRepository.findAllByUserId(userId, pageable).getContent();
     }
 }
