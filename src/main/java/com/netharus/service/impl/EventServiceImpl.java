@@ -4,7 +4,6 @@ import com.netharus.domain.Event;
 import com.netharus.repositories.EventRepository;
 import com.netharus.service.EventService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
