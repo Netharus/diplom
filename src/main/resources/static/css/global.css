@@ -1,0 +1,223 @@
+:root {
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --success-color: #5FB878;
+    --danger-color: #FFA500;
+    --background-color: #D3D3D3;
+    --regular-color: #4F97D0;
+    --dark-regular-color: #1E3A5F;
+}
+
+/* === Base === */
+body {
+    margin: 0;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    margin: 0 auto;
+    width: 80%;
+}
+
+/* === Sidebar === */
+.page-sidebar {
+    background-color: var(--regular-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 24px;
+    height: 100%;
+    padding: 0 24px 0 24px;
+    width: 15%;
+}
+
+.page-sidebar .sidebar-header {
+    padding: 24px 0 0;
+}
+
+.header-button {
+    background-color: var(--regular-color);
+    border: 0;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+}
+
+/* === Sidebar Menu === */
+.page-sidebar .menu {
+    align-items: flex-start;
+    color: #FFF;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-heading), serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    gap: 10px;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.page-sidebar .menu span {
+    color: #FFF;
+    font-family: var(--font-heading), serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.menu li {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+/* === Sidebar Footer === */
+.page-sidebar .sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: auto;
+    padding: 0 0 24px;
+}
+
+.page-sidebar .sidebar-footer .footer-button {
+    align-items: center;
+    background-color: var(--regular-color);
+    border: 0;
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.page-sidebar .sidebar-footer .logout-button span {
+    color: var(--danger-color);
+}
+
+.page-sidebar .sidebar-footer span {
+    color: #FFF;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: -0.28px;
+    line-height: 20px;
+}
+
+.logout-button {
+    color: var(--danger-color)
+}
+
+/* === Main Content === */
+.main-content {
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+}
+
+.main-content .header {
+    align-items: center;
+    background-color: #FFFFFF;
+    display: flex;
+    height: 8%;
+}
+
+.main-content .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    background-color: white;
+    border: 0;
+    border-radius: 14px;
+    flex: 1;
+    margin: 20px;
+}
+
+.main-content .header span {
+    color: black;
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    margin-left: 34px;
+}
+
+/* === Buttons === */
+.menu-button {
+    align-items: center;
+    background-color: var(--regular-color);
+    border: 0;
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    width: 100%;
+}
+
+.menu-button:hover {
+    background-color: var(--dark-regular-color);
+    border-radius: 8px;
+}
+.menu-button.active {
+    background-color: var(--dark-regular-color);
+    border-radius: 8px;
+}
+.button-icon {
+    height: 20px;
+    width: 20px;
+}
+
+/* === Hover Underline Animation === */
+.hover-underline-animation {
+    display: inline-block;
+    position: relative;
+}
+
+.hover-underline-animation::after {
+    background-color: var(--dark-regular-color);
+    bottom: 0;
+    content: '';
+    height: 2px;
+    left: 0;
+    position: absolute;
+    transform: scaleX(0);
+    transition: transform 0.25s ease-out;
+    width: 100%;
+}
+
+.hover-underline-animation:hover::after {
+    transform: scaleX(1);
+}
+
+.hover-underline-animation.left::after {
+    transform-origin: bottom right;
+}
+
+.hover-underline-animation.left:hover::after {
+    transform-origin: bottom left;
+}
+
+/* === Utility === */
+.line {
+    align-self: stretch;
+    border: none;
+    border-top: 1px solid #FFFFFF;
+    width: 100%;
+}
+
+.topic-name {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    margin-top: 20px;
+}

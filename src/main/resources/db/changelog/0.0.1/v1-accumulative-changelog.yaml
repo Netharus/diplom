@@ -5,3 +5,9 @@ databaseChangeLog:
   - include:
       file: v1-create-logs-table.yaml
       relativeToChangelogFile: true
+  - include:
+      file: v1-create-event-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: v2-change-date-time-type.yaml
+      relativeToChangelogFile: true
