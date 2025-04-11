@@ -1,0 +1,82 @@
+.scenario-container {
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+    align-items: center;
+}
+.gesture-box {
+    display: flex;
+    flex-direction: column;
+    gap:30px;
+    align-items: center;
+}
+.gestures {
+    display: flex;
+    gap: 30px;
+    width: 50%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.gesture-button {
+    border: 0;
+    border-radius: 25px;
+    width: 120px;
+    height: 120px;
+    background-color: var(--success-color);
+}
+.gesture-button:hover {
+    transform: scale(1.03);
+}
+.scenario-box {
+    width: 100%;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.scenario-gesture-button-box {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: space-between;
+    align-items: center;
+}
+.gesture-scenario-box {
+    width: 120px;
+    height: 120px;
+    border-radius: 25px;
+    border: 2px solid var(--regular-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.arrow-right {
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid var(--dark-regular-color);
+}
+.scenario-button-box {
+    width: 85%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.selected-gesture-box {
+    cursor: pointer;
+    background-color: var(--success-color);
+    border: 0;
+}
+.selected-gesture-box:hover {
+    transform: scale(1.03);
+    border: 3px solid red;
+}
+.custom-tooltip {
+    background-color: var(--dark-regular-color);
+}
+
+

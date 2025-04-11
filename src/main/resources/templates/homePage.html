@@ -83,7 +83,7 @@
     </div>
     <div class="main-content">
         <div class="header">
-            <span>HOME PAGE</span>
+            <span th:text="${pageTitle}"></span>
         </div>
         <div class="content">
             <div th:replace="~{fragments/fragments::__${fragment}__}"></div>
