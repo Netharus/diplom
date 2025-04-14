@@ -9,4 +9,6 @@ public interface ScenarioService {
     byte[] exportScenario(String scenario) throws IOException;
 
     int[] importScenario(MultipartFile file) throws IOException;
+
+    void sendScenario(String scenario);
 }

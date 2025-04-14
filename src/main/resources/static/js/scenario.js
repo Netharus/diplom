@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const EMPTY_MESSAGE = "Нельзя запустить пустой сценарий!";
     const EMPTY_EXPORT_MESSAGE = "Нельзя экспортировать пустой сценарий!";
     const LOAD_EXCEPTION_MESSAGE = "Ошибка при загрузке сценария";
+    const EXPORT_EXCEPTION_MESSAGE = 'Не удалось экспортировать сценарий. Попробуйте позже.';
 
     const updateBox = (box, src, alt) => {
         const clonedImg = document.createElement('img');
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scenarioInput.value = scenarioValue;
     });
 
-    exportButton.addEventListener('click', () => {
+    exportButton.addEventListener('click', async () => {
         const scenarioValue = Array.from(gestureMap.entries())
             .sort((a, b) => a[0] - b[0])
             .map(([_, id]) => id)
@@ -95,7 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        window.location.href = `/exportScenario?scenario=${encodeURIComponent(scenarioValue)}`;
+        try {
+            const response = await fetch(`/exportScenario?scenario=${encodeURIComponent(scenarioValue)}`);
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                toastText.textContent = errorResponse.message || EXPORT_EXCEPTION_MESSAGE;
+                toast.show();
+                return;
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'scenario.json';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+        } catch (error) {
+            toastText.textContent = EXPORT_EXCEPTION_MESSAGE;
+            toast.show();
+            console.error('Ошибка при экспорте сценария:', error);
+        }
     });
 
     importButton.addEventListener('click', () => {
@@ -107,14 +133,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch('/importScenario', {
-                method: 'POST',
-                body: formData
-            });
+            try {
+                const response = await fetch('/importScenario', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            if (response.ok) {
+                if (!response.ok) {
+                    const errorResponse = await response.json();
+                    toastText.textContent = errorResponse.message || LOAD_EXCEPTION_MESSAGE;
+                    toast.show();
+                    return;
+                }
+
                 const scenarioArray = await response.json();
-
 
                 gestureMap.clear();
                 scenarioBoxes.forEach(box => {
@@ -125,7 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const tooltipInstance = bootstrap.Tooltip.getInstance(box);
                     if (tooltipInstance) tooltipInstance.dispose();
                 });
-
 
                 scenarioArray.forEach((gestureId, index) => {
                     if (index < scenarioBoxes.length) {
@@ -143,9 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 scenarioInput.value = scenarioArray.join(' ');
 
-            } else {
-                toastText.textContent=LOAD_EXCEPTION_MESSAGE;
+            } catch (error) {
+                toastText.textContent = LOAD_EXCEPTION_MESSAGE;
                 toast.show();
+                console.error('Ошибка при импорте сценария:', error);
             }
         };
         fileInput.click();

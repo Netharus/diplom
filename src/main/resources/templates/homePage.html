@@ -30,31 +30,31 @@
                             th:classappend="${fragment.equals('homePage')} ? ' active'"
                             onclick="document.location='/home'">
                         <img class="button-icon" src="/images/Home-page.png" alt="Home Page Image">
-                        <span>Home page</span>
+                        <span>Главная страница</span>
                     </button>
                 </li>
-                <li>
-                    <button class="menu-button"
-                            th:classappend="${fragment.equals('account')} ? ' active'"
-                            onclick="document.location='/account'">
-                        <img class="button-icon" src="/images/Account.png" alt="Account Image">
-                        <span>Account</span>
-                    </button>
-                </li>
+<!--                <li>-->
+<!--                    <button class="menu-button"-->
+<!--                            th:classappend="${fragment.equals('account')} ? ' active'"-->
+<!--                            onclick="document.location='/account'">-->
+<!--                        <img class="button-icon" src="/images/Account.png" alt="Account Image">-->
+<!--                        <span>Account</span>-->
+<!--                    </button>-->
+<!--                </li>-->
                 <li>
                     <button class="menu-button"
                             th:classappend="${fragment.equals('notification')} ? ' active'"
                             onclick="document.location='/notifications'">
                         <img class="button-icon" src="/images/Notification.png" alt="Notification Image">
-                        <span>Notification</span>
+                        <span>Уведомления</span>
                     </button>
                 </li>
                 <li>
                     <button class="menu-button"
                             th:classappend="${fragment.equals('recent')} ? ' active'"
-                            onclick="document.location='/recent'">
+                            onclick="document.location='/history'">
                         <img class="button-icon" src="/images/Recent.png" alt="Recent Image">
-                        <span>Recent</span>
+                        <span>История</span>
                     </button>
                 </li>
                 <li>
@@ -62,7 +62,7 @@
                             th:classappend="${fragment.equals('scenarios')} ? ' active'"
                             onclick="document.location='/scenario'">
                         <img class="button-icon" src="/images/Scenarios.png" alt="Scenarios Image">
-                        <span>Scenarios</span>
+                        <span>Сценарий</span>
                     </button>
                 </li>
             </ul>
@@ -71,12 +71,12 @@
         <div class="sidebar-footer">
             <button class="footer-button help-button">
                 <img class="button-icon" src="/images/Help.png"
-                     alt="Help Image"><span class="hover-underline-animation left">Help</span>
+                     alt="Help Image"><span class="hover-underline-animation left">Помощь</span>
             </button>
             <form th:action="@{/logout}" method="post" name="logoutForm">
                 <button id="logoutLink" class="footer-button logout-button" type="submit">
                     <img class="button-icon" src="/images/Logout.png"
-                         alt="Logout account image"><span class="hover-underline-animation left">Logout account</span>
+                         alt="Logout account image"><span class="hover-underline-animation left">Выйти из аккаунта</span>
                 </button>
             </form>
         </div>

@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-public class ScenarioController {
+public class RestScenarioController {
 
     private final ScenarioService scenarioService;
 
