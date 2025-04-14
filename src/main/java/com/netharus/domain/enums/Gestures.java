@@ -1,6 +1,6 @@
 package com.netharus.domain.enums;
 
-import com.netharus.domain.dto.reponse.GesturesDto;
+import com.netharus.domain.dto.response.GesturesDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
