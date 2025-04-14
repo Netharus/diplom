@@ -1,4 +1,4 @@
-package com.netharus.domain.dto.reponse;
+package com.netharus.domain.dto.response;
 
 import lombok.Builder;
 
