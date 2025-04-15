@@ -1,0 +1,127 @@
+:root {
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --success-color: #5FB878;
+    --danger-color: #FFA500;
+    --background-color: #D3D3D3;
+    --regular-color: #4F97D0;
+    --dark-regular-color: #1E3A5F;
+}
+.page-container {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #4F97D0 0%, #1E3A5F 68.5%);
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%;
+}
+
+.hand-icon {
+    display: flex;
+    height: 100%;
+    width: 30%;
+    align-items: flex-end;
+    justify-content: center;
+    margin-top: auto;
+    background: linear-gradient(180deg, #4F97D0 0%, #1E3A5F 68.5%);
+}
+
+.main-content {
+    display: flex;
+    width: 40%;
+    flex-direction: column;
+    background-color: white;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-content .login-input-group {
+    justify-content: center;
+}
+
+.login-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 40%;
+    justify-content: center;
+}
+.login-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 44px;
+    border: none;
+    background-color: var(--dark-regular-color);
+    color: white;
+}
+
+.login-button:hover {
+    transform: scale(1.03);
+}
+
+.login-title {
+    color: #212121;
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+
+.icon {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.icon img {
+    width: 20px;
+    height: 20px;
+}
+
+input {
+    border: none;
+    outline: none;
+    flex: 1;
+}
+
+.registration-link  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.registration-link a {
+    color: black;
+    font-weight: bold;
+}
+.toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password:hover{
+    transform: scale(1.02);
+}
+
+.toggle-password img {
+    width: 20px;
+    height: 20px;
+}
