@@ -9,11 +9,13 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -41,13 +43,13 @@ public class WebSecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest()
-                        .permitAll())
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .permitAll()
-//                        .usernameParameter("username")
-//                        .defaultSuccessUrl("/home")
-//                )
+                        .authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .usernameParameter("username")
+                        .defaultSuccessUrl("/home")
+                )
                 .logout((logout) ->
                         logout.deleteCookies("JSESSIONID")
                                 .invalidateHttpSession(false)
@@ -68,7 +70,12 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/images/**", "/js/**", "/webjars/**", "/css/**");
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(5);
+        return new BCryptPasswordEncoder(12);
     }
 }

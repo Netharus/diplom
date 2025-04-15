@@ -98,18 +98,9 @@
 </div>
 
 <!--SCENARIO FRAGMENT-->
-
 <div th:fragment="scenario">
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-        <div id="toast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <p id="toastText"></p>
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
-            </div>
-        </div>
-    </div>
+    <div th:replace="~{fragments/fragments::exceptionToast}"></div>
+
     <script src="/js/scenario.js"></script>
     <div class="scenario-container">
         <div class="gesture-box">
@@ -146,6 +137,120 @@
                     <input type="hidden" name="scenario" id="scenarioInput" />
                     <button class="btn btn-outline-success" type="submit" id="inputButton">Выполнить сценарий</button>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--History-->
+<div th:fragment="history">
+    <div class="history-container">
+        <table class="table  table-bordered table-hover table-responsive-xl">
+            <thead class="table-primary">
+            <tr>
+                <th th:replace="~{fragments/fragments::column_link('/admin/flights','id','id')}"/>
+                <th th:replace="~{fragments/fragments::column_link('/admin/flights','flightNumber','Номер рейса')}"/>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="event: ${pageContainer.list()}">
+                <td>[[${event.dateTime}]]</td>
+                <td>[[${event.gesture}]]</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--TABLE FRAGMENT-->
+<th th:fragment="column_link(moduleURL, fieldName, columnLabel)">
+    <a th:href="@{${moduleURL}+'?page='+${pageContainer.currentPage}+'&sort='+${fieldName}+','+${pageContainer.sortField != fieldName ? pageContainer.sortDir : pageContainer.reverseSortDir}+${pageContainer.keyword != null ? '&keyword='+pageContainer.keyword : ''}}"
+       class="text-primary text-decoration-none">
+        [[${columnLabel}]]
+    </a>
+
+    <span th:if="${pageContainer.sortField == fieldName}"
+          th:class="${pageContainer.sortDir == 'ASC' ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short'}"
+          class="ms-2 text-primary"></span>
+</th>
+
+<a th:fragment="page_link(moduleURL,pageNum,label)" class="page-link"
+   th:href="@{${moduleURL}+'?page='+${pageNum}+'&sortField='+${pageContainer.sortField} +'&sortDir='+${pageContainer.sortDir}+${pageContainer.keyword != null ? '&keyword='+pageContainer.keyword:''}}">[[${label}]]</a>
+
+<div th:fragment="pagination(moduleURL,entityName)" th:remove="tag">
+    <div class="text-center m-3" th:if="${pageContainer.totalItems} > 0">
+        <span class="text-muted">
+            Показаны [[${entityName}]] # [[${pageContainer.startCount}]] по [[${pageContainer.endCount}]] из [[${pageContainer.totalItems}]]
+        </span>
+    </div>
+
+    <div class="text-center m-3" th:unless="${pageContainer.totalItems} > 0">
+        <span class="text-warning">[[${entityName}]] не найдены</span>
+    </div>
+
+    <div th:if="${pageContainer.totalPages > 0}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL},'1','Первая')}"
+                       class="page-link"></a>
+                </li>
+
+                <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL},${pageContainer.currentPage-1},'Предыдущая')}"
+                       class="page-link"></a>
+                </li>
+
+                <li th:class="${pageContainer.currentPage+1 != i ? 'page-item' : 'page-item active'}"
+                    th:each="i:${#numbers.sequence(1, pageContainer.totalPages)}">
+                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL}, ${i-1}, ${i})}"
+                       class="page-link"></a>
+                </li>
+
+                <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL}, ${pageContainer.currentPage + 1}, 'Следующая')}"
+                       class="page-link"></a>
+                </li>
+
+                <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
+                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL}, ${pageContainer.totalPages}, 'Последняя')}"
+                       class="page-link"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!--Exception toaster-->
+<div th:fragment="exceptionToastActivator" th:remove="tag">
+    <div id="exception-message" th:if="${exceptionMessage != null}" th:data-message="${exceptionMessage}" style="display:none;"></div>
+    <div th:replace="~{fragments/fragments::exceptionToast}"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const msgContainer = document.getElementById("exception-message");
+            if (msgContainer) {
+                const message = msgContainer.getAttribute("data-message");
+                showToast(message);
+            }
+        });
+        function showToast(message) {
+            const toastText = document.getElementById("toastText");
+            toastText.textContent = message;
+            const toast = new bootstrap.Toast(document.getElementById("toast"));
+            toast.show();
+        }
+    </script>
+</div>
+<div th:fragment="exceptionToast">
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="toast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive"
+             aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <p id="toastText"></p>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Закрыть"></button>
             </div>
         </div>
     </div>
