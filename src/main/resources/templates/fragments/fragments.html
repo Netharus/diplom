@@ -146,10 +146,10 @@
 <div th:fragment="history">
     <div class="history-container">
         <table class="table  table-bordered table-hover table-responsive-xl">
-            <thead class="table-primary">
+            <thead class="" style="background-color: var(--regular-color)">
             <tr>
-                <th th:replace="~{fragments/fragments::column_link('/admin/flights','id','id')}"/>
-                <th th:replace="~{fragments/fragments::column_link('/admin/flights','flightNumber','Номер рейса')}"/>
+                <th th:replace="~{fragments/fragments::column_link('/history','dateTime','Дата и время')}"/>
+                <th th:replace="~{fragments/fragments::column_link('/history','gesture','Жест')}"/>
             </tr>
             </thead>
             <tbody>
@@ -159,19 +159,20 @@
             </tr>
             </tbody>
         </table>
+        <div th:replace="~{fragments/fragments::pagination('/history','Действия')}"></div>
     </div>
 </div>
 
 <!--TABLE FRAGMENT-->
 <th th:fragment="column_link(moduleURL, fieldName, columnLabel)">
     <a th:href="@{${moduleURL}+'?page='+${pageContainer.currentPage}+'&sort='+${fieldName}+','+${pageContainer.sortField != fieldName ? pageContainer.sortDir : pageContainer.reverseSortDir}+${pageContainer.keyword != null ? '&keyword='+pageContainer.keyword : ''}}"
-       class="text-primary text-decoration-none">
+       class="text-decoration-none" style="color: #FFFFFF">
         [[${columnLabel}]]
     </a>
 
     <span th:if="${pageContainer.sortField == fieldName}"
-          th:class="${pageContainer.sortDir == 'ASC' ? 'fa-solid fa-arrow-down-short-wide' : 'fa-solid fa-arrow-down-wide-short'}"
-          class="ms-2 text-primary"></span>
+          th:text="${pageContainer.sortDir == 'ASC' ? '↓' : '↑'}"
+          class="ms-2" style="color: #FFFFFF"></span>
 </th>
 
 <a th:fragment="page_link(moduleURL,pageNum,label)" class="page-link"
@@ -192,28 +193,28 @@
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL},'1','Первая')}"
+                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL},'1','Первая')}"
                        class="page-link"></a>
                 </li>
 
                 <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL},${pageContainer.currentPage-1},'Предыдущая')}"
+                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL},${pageContainer.currentPage-1},'Предыдущая')}"
                        class="page-link"></a>
                 </li>
 
                 <li th:class="${pageContainer.currentPage+1 != i ? 'page-item' : 'page-item active'}"
                     th:each="i:${#numbers.sequence(1, pageContainer.totalPages)}">
-                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL}, ${i-1}, ${i})}"
+                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${i-1}, ${i})}"
                        class="page-link"></a>
                 </li>
 
                 <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL}, ${pageContainer.currentPage + 1}, 'Следующая')}"
+                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${pageContainer.currentPage + 1}, 'Следующая')}"
                        class="page-link"></a>
                 </li>
 
                 <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragment :: page_link(${moduleURL}, ${pageContainer.totalPages}, 'Последняя')}"
+                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${pageContainer.totalPages}, 'Последняя')}"
                        class="page-link"></a>
                 </li>
             </ul>
@@ -255,5 +256,6 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>

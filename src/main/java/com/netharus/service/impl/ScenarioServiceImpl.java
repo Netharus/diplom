@@ -1,10 +1,11 @@
 package com.netharus.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.netharus.exceptions.ErrorMessages;
+import com.netharus.domain.enums.Gestures;
 import com.netharus.exceptions.IllegalScenarioFileFormatException;
 import com.netharus.exceptions.IllegalStringFormatException;
 import com.netharus.service.ScenarioService;
+import com.netharus.stringConstants.ErrorMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,8 @@ public class ScenarioServiceImpl implements ScenarioService {
             scenarioArray[i] = Integer.parseInt(scenarioParts[i]);
         }
 
+        log.info("Экспортированные жесты: {}", Arrays.toString(scenarioArray));
+
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsBytes(scenarioArray);
     }
@@ -39,20 +42,24 @@ public class ScenarioServiceImpl implements ScenarioService {
     public int[] importScenario(MultipartFile file) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         int[] scenarioArray = objectMapper.readValue(file.getInputStream(), int[].class);
-        if (Arrays.stream(scenarioArray).anyMatch(value -> value < 1 || value > 8)) {
+        if (!Gestures.isGesture(scenarioArray)) {
             throw new IllegalScenarioFileFormatException(ErrorMessages.ILLEGAL_SCENARIO_FILE_FORMAT_EXCEPTION);
         }
+        log.info("Импортированные жесты: {}", Arrays.toString(scenarioArray));
         return scenarioArray;
     }
 
     @Override
-    public void sendScenario(String scenario) {
+    public String sendScenario(String scenario) {
+        String scenarioString;
         if (isValidFormat(scenario)) {
             List<Integer> gestureIds = parseScenario(scenario);
+            scenarioString = gestureIds.stream().map(Gestures::getGestureTitle).collect(Collectors.joining(","));
             log.info("Полученные жесты: {}", gestureIds);
         } else {
             throw new IllegalStringFormatException(ErrorMessages.ILLEGAL_STRING_FORMAT_EXCEPTION);
         }
+        return scenarioString;
     }
 
     private List<Integer> parseScenario(String scenario) {
@@ -62,6 +69,8 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     public static boolean isValidFormat(String scenario) {
-        return scenario.trim().matches("^(?:[1-8](?:\\s+[1-8]){0,4})$");
+        String regexp = String.format("^(?:[1-%d](?:\\s+[1-8]){0,4})$", Gestures.amount());
+        log.info(regexp);
+        return scenario.trim().matches(regexp);
     }
 }

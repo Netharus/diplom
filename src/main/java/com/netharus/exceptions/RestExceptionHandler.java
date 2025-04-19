@@ -1,6 +1,7 @@
 package com.netharus.exceptions;
 
 import com.netharus.domain.dto.response.ErrorResponseDto;
+import com.netharus.stringConstants.ErrorMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

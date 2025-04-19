@@ -44,9 +44,11 @@ public class User {
     @Column(nullable = false)
     private Role role = Role.USER;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Log> logs = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Event> events = new HashSet<>();
 
