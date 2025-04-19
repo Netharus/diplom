@@ -33,7 +33,7 @@ public enum Gestures {
 
     public static boolean isGesture(int[] gesturesIds) {
         for (int gesturesId : gesturesIds) {
-            if (Arrays.stream(values()).anyMatch(value -> value.getId() != gesturesId))
+            if (Arrays.stream(values()).noneMatch(value -> value.getId() == gesturesId))
                 return false;
         }
         return true;
