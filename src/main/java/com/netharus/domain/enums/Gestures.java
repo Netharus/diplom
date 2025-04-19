@@ -23,6 +23,26 @@ public enum Gestures {
     private final String name;
     private final int id;
 
+    public static String getGestureTitle(int id) {
+        return values()[id].getTitle();
+    }
+
+    public static boolean isGesture(int id) {
+        return Arrays.stream(values()).anyMatch(value -> value.getId() == id);
+    }
+
+    public static boolean isGesture(int[] gesturesIds) {
+        for (int gesturesId : gesturesIds) {
+            if (Arrays.stream(values()).anyMatch(value -> value.getId() != gesturesId))
+                return false;
+        }
+        return true;
+    }
+
+    public static int amount() {
+        return values().length;
+    }
+
     public static List<GesturesDto> getAll() {
         return Arrays.stream(values())
                 .map(gesture -> (GesturesDto.builder()
