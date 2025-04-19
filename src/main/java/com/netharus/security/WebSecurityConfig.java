@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -42,6 +41,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, UserRepository userRepository) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/registration")
+                        .permitAll()
                         .anyRequest()
                         .authenticated())
                 .formLogin(form -> form
