@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3.3.1
+      author: Mikhail Kondratsiuk
+      changes:
+        - loadData:
+            tableName: users
+            file: db/changelog/0.0.1/data/admin-data.csv
+            separator: ","
+            encoding: UTF-8
+            columns:
+              - column:
+                  name: username
+                  header: username
+              - column:
+                  name: password
+                  header: password
+              - column:
+                  name: role
+                  header: role
+              - column:
+                  name: active
+                  header: active
