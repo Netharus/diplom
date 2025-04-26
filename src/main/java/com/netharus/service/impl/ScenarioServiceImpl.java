@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netharus.domain.enums.Gestures;
 import com.netharus.exceptions.IllegalScenarioFileFormatException;
 import com.netharus.exceptions.IllegalStringFormatException;
+import com.netharus.lock.GlobalLock;
+import com.netharus.service.ActionAsyncService;
 import com.netharus.service.ScenarioService;
 import com.netharus.stringConstants.ErrorMessages;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,11 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class ScenarioServiceImpl implements ScenarioService {
+
+    private final GlobalLock globalLock;
+    private final ActionAsyncService actionAsyncService;
 
     @Override
     public byte[] exportScenario(String scenario) throws IOException {
@@ -50,22 +56,20 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public String sendScenario(String scenario) {
-        String scenarioString;
-        if (isValidFormat(scenario)) {
-            List<Integer> gestureIds = parseScenario(scenario);
-            scenarioString = gestureIds.stream().map(Gestures::getGestureTitle).collect(Collectors.joining(","));
-            log.info("Полученные жесты: {}", gestureIds);
-        } else {
+    public void sendScenario(Long userId, String scenario) {
+        if (!isValidFormat(scenario)) {
+            log.warn("Блокировка со сценария снята из-за ошибки");
+            globalLock.unlock();
             throw new IllegalStringFormatException(ErrorMessages.ILLEGAL_STRING_FORMAT_EXCEPTION);
         }
-        return scenarioString;
+        List<Integer> gestureIds = parseScenario(scenario);
+        actionAsyncService.sendAsyncScenario(userId, gestureIds);
     }
 
     private List<Integer> parseScenario(String scenario) {
         return Arrays.stream(scenario.trim().split("\\s+"))
                 .map(Integer::parseInt)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static boolean isValidFormat(String scenario) {

@@ -25,9 +25,11 @@ repositories {
 
 ext {
 
+springCloudVersion = "2024.0.1"
 }
 
 dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     def mapstructVersion = '1.6.3'
     def lombokMapstructBindingVersion = '0.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -50,6 +52,12 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
 }
 
 tasks.named('test') {

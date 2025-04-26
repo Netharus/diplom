@@ -1,29 +1,21 @@
 package com.netharus.controller;
 
 import com.netharus.domain.enums.Gestures;
-import com.netharus.service.EventService;
-import com.netharus.service.ScenarioService;
-import com.netharus.service.UserService;
 import com.netharus.stringConstants.PageTitles;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class ScenarioController {
-
-    private final ScenarioService scenarioService;
-    private final EventService eventService;
-    private final UserService userService;
 
     @GetMapping("/scenario")
     public ModelAndView scenario(@AuthenticationPrincipal UserDetails user) {
@@ -37,10 +29,4 @@ public class ScenarioController {
         return mav;
     }
 
-    @PostMapping("/scenario")
-    public String sendScenario(@RequestParam String scenario, HttpServletRequest request, @AuthenticationPrincipal UserDetails user) {
-        String scenarioString = scenarioService.sendScenario(scenario);
-        eventService.createEvent(scenarioString, userService.findByUsername(user.getUsername()));
-        return "redirect:" + request.getHeader("referer");
-    }
 }

@@ -10,5 +10,5 @@ public interface ScenarioService {
 
     int[] importScenario(MultipartFile file) throws IOException;
 
-    String sendScenario(String scenario);
+    void sendScenario(Long userId, String scenario);
 }

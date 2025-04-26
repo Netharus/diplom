@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -25,6 +26,13 @@ public enum Gestures {
 
     public static String getGestureTitle(int id) {
         return values()[id].getTitle();
+    }
+
+    public static String getGestures(String scenario) {
+        List<Integer> gestureIds = Arrays.stream(scenario.trim().split("\\s+"))
+                .map(Integer::parseInt)
+                .toList();
+        return gestureIds.stream().map(Gestures::getGestureTitle).collect(Collectors.joining(","));
     }
 
     public static boolean isGesture(int id) {
