@@ -1,5 +1,7 @@
-package com.netharus.exceptions;
+package com.netharus.exceptions.handler;
 
+import com.netharus.exceptions.AlreadyExistsException;
+import com.netharus.exceptions.IllegalStringFormatException;
 import com.netharus.stringConstants.ErrorMessages;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -33,4 +35,6 @@ public class GlobalExceptionHandler {
         redirectAttributes.addFlashAttribute("exceptionMessage", ex.getMessage());
         return "redirect:" + request.getHeader("referer");
     }
+
 }
+
