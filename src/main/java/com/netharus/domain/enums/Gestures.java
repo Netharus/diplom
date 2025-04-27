@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public enum Gestures {
-    THUMBS_UP("Thumbs Up", "ThumbsUp", 1),
-    FIST("Fist", "Fist", 2),
-    PALM_UP("Palm Up", "PalmUp", 3),
-    ROCK_ON("Rock On", "RockOn", 4),
-    ONE_FINGER_UP("One Finger Up", "OneFingerUp", 5),
-    TWO_FINGERS_UP("Two Fingers Up", "TwoFingersUp", 6),
-    CALL("Call", "Call", 7),
-    VICTORY("Victory", "Victory", 8);
+    THUMBS_UP("Палец вверх", "ThumbsUp", 1),
+    FIST("Кулак", "Fist", 2),
+    PALM_UP("Ладонь вверх", "PalmUp", 3),
+    ROCK_ON("Рок-н-ролл", "RockOn", 4),
+    ONE_FINGER_UP("Один палец вверх", "OneFingerUp", 5),
+    TWO_FINGERS_UP("Два пальца вверх", "TwoFingersUp", 6),
+    CALL("Звонок", "Call", 7),
+    VICTORY("Победа", "Victory", 8);
 
     private final String title;
     private final String name;
