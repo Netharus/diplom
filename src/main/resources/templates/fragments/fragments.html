@@ -101,7 +101,7 @@
 
 <!--SCENARIO FRAGMENT-->
 <div th:fragment="scenario">
-    <div th:replace="~{fragments/fragments::exceptionToast}"></div>
+<!--    <div th:replace="~{fragments/fragments::exceptionToast}"></div>-->
 
     <script src="/js/scenario.js"></script>
     <div class="scenario-container">
@@ -251,6 +251,41 @@
             <div class="d-flex">
                 <div class="toast-body">
                     <p id="toastText"></p>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Закрыть"></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Success toaster-->
+<div th:fragment="successToastActivator" th:remove="tag">
+    <div id="success-message" th:if="${successMessage != null}" th:data-message="${successMessage}" style="display:none;"></div>
+    <div th:replace="~{fragments/fragments::successToast}"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const msgContainer = document.getElementById("success-message");
+            if (msgContainer) {
+                const message = msgContainer.getAttribute("data-message");
+                showSuccessToast(message);
+            }
+        });
+        function showSuccessToast(message) {
+            const toastText = document.getElementById("successToastText");
+            toastText.textContent = message;
+            const toast = new bootstrap.Toast(document.getElementById("successToast"));
+            toast.show();
+        }
+    </script>
+</div>
+<div th:fragment="successToast">
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
+        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive"
+             aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <p id="successToastText"></p>
                 </div>
                 <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
                         aria-label="Закрыть"></button>
