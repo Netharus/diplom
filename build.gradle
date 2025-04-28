@@ -25,13 +25,15 @@ repositories {
 
 ext {
 
-springCloudVersion = "2024.0.1"
+    springCloudVersion = "2024.0.1"
 }
 
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     def mapstructVersion = '1.6.3'
     def lombokMapstructBindingVersion = '0.2.0'
+    def sockJsClientVersion = '1.0.2'
+    def stompVersion = '2.3.3'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -39,6 +41,9 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'org.webjars:webjars-locator-core'
+    implementation "org.webjars:sockjs-client:${sockJsClientVersion}"
+    implementation "org.webjars:stomp-websocket:${stompVersion}"
     implementation "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     compileOnly 'org.projectlombok:lombok'

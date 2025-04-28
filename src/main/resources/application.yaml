@@ -19,6 +19,9 @@ spring:
           arduinoClient:
             url: ${ARDUINO_URL}
             error-decoder: com.netharus.exceptions.decoder.CustomErrorDecoder
+  web:
+    resources:
+      add-mappings: true
 
 server:
   port: ${SERVER_PORT}

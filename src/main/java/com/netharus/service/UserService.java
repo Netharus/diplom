@@ -7,4 +7,6 @@ public interface UserService {
     User findByUsername(String username);
 
     User createAccount(UserDto userDto);
+    
+    User findById(Long userId);
 }

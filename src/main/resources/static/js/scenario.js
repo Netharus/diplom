@@ -3,10 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const scenarioBoxes = document.querySelectorAll('.gesture-scenario-box');
     const toast = new bootstrap.Toast(document.getElementById('toast'));
     const toastText = document.getElementById('toastText');
+    const successToast = new bootstrap.Toast(document.getElementById('successToast'));
+    const successToastText = document.getElementById('successToastText');
     const exportButton = document.getElementById('exportButton');
     const importButton = document.getElementById('importButton');
     const inputButton = document.getElementById('inputButton');
     const scenarioInput = document.getElementById('scenarioInput');
+    const scenarioForm = document.getElementById('scenarioForm');
     const gestureMap = new Map();
 
     const LIMIT_MESSAGE = "Нельзя добавить больше 5 жестов в сценарий.";
@@ -53,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
     scenarioBoxes.forEach((box, index) => {
         box.addEventListener('click', () => {
             box.innerHTML = '';
@@ -78,9 +80,51 @@ document.addEventListener('DOMContentLoaded', () => {
             toastText.textContent = EMPTY_MESSAGE;
             toast.show();
             e.preventDefault();
+            return;
         }
 
         scenarioInput.value = scenarioValue;
+    });
+
+    scenarioForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const scenarioValue = Array.from(gestureMap.entries())
+            .sort((a, b) => a[0] - b[0])
+            .map(([_, id]) => id)
+            .join(' ')
+            .trim();
+
+        if (scenarioValue === "") {
+            toastText.textContent = EMPTY_MESSAGE;
+            toast.show();
+            return;
+        }
+
+        try {
+            const response = await fetch('/scenario', {
+                method: 'POST',
+                body: new URLSearchParams({ scenario: scenarioValue }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                toastText.textContent = errorText || "Ошибка при выполнении сценария.";
+                toast.show();
+                return;
+            }
+
+            const successMessage = await response.text();
+            successToastText.textContent = successMessage;
+            successToast.show();
+        } catch (error) {
+            toastText.textContent = "Ошибка при выполнении сценария.";
+            toast.show();
+            console.error('Ошибка отправки сценария:', error);
+        }
     });
 
     exportButton.addEventListener('click', async () => {

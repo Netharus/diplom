@@ -27,7 +27,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(String.format(ErrorMessages.USER_NOT_FOUND, username)));
+                .orElseThrow(() -> new UserNotFoundException(
+                        String.format(ErrorMessages.USER_NOT_FOUND, username)));
     }
 
     @Override
@@ -44,6 +45,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(
+                        String.format(ErrorMessages.USER_NOT_FOUND, userId)));
+    }
+
     @Transactional(readOnly = true)
     protected boolean isExist(String username) {
         return userRepository.findByUsername(username).isPresent();
@@ -51,6 +59,9 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     protected boolean isUserUnique(String username, Long id) {
-        return userRepository.findByUsername(username).map(User::getId).filter(userId -> userId.equals(id)).isPresent();
+        return userRepository.findByUsername(username)
+                .map(User::getId)
+                .filter(userId -> userId.equals(id))
+                .isPresent();
     }
 }

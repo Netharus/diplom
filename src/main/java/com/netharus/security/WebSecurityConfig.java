@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                                 .logoutSuccessUrl("/home")
                 )
                 .rememberMe(rememberMe -> rememberMe
+                        .rememberMeParameter("remember-me")
                         .key("uniqueAndSecret")
                         .tokenValiditySeconds(7 * 24 * 60 * 60)
                         .userDetailsService(userDetailsService(userRepository))
