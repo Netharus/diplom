@@ -1,10 +1,12 @@
 package com.netharus.service;
 
+import com.netharus.domain.User;
+
 import java.util.List;
 
 public interface ActionAsyncService {
 
-    void sendAsyncGesture(Long userId, Integer gestureId);
+    void sendAsyncGesture(User user, Integer gestureId);
 
-    void sendAsyncScenario(Long userId, List<Integer> gestureIds);
+    void sendAsyncScenario(User user, List<Integer> gestureIds);
 }

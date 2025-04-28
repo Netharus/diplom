@@ -1,5 +1,6 @@
 package com.netharus.service.impl;
 
+import com.netharus.domain.User;
 import com.netharus.domain.enums.Gestures;
 import com.netharus.exceptions.IllegalScenarioFileFormatException;
 import com.netharus.lock.GlobalLock;
@@ -20,12 +21,12 @@ public class GestureServiceImpl implements GestureService {
 
 
     @Override
-    public void sendGesture(Long userId, Integer gestureId) {
+    public void sendGesture(User user, Integer gestureId) {
         if (!Gestures.isGesture(gestureId)) {
             log.warn("Блокировка c жеста снята из-за ошибки");
             globalLock.unlock();
             throw new IllegalScenarioFileFormatException(String.format(ErrorMessages.ILLEGAL_GESTURE_ID, gestureId));
         }
-        actionAsyncService.sendAsyncGesture(userId, gestureId);
+        actionAsyncService.sendAsyncGesture(user, gestureId);
     }
 }

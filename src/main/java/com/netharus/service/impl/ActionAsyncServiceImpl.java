@@ -27,13 +27,13 @@ public class ActionAsyncServiceImpl implements ActionAsyncService {
 
     @Async
     @Override
-    public void sendAsyncGesture(Long userId, Integer gestureId) {
+    public void sendAsyncGesture(User user, Integer gestureId) {
         try {
             log.info("Отправлен жест с id: {}", gestureId);
             ArduinoResponseDto arduinoResponseDto = arduinoClient.single(GestureArduinoDto
                     .builder()
                     .gestureId(gestureId)
-                    .userId(userId)
+                    .userId(user.getId())
                     .build());
             log.info(arduinoResponseDto.message());
         } finally {
@@ -43,13 +43,13 @@ public class ActionAsyncServiceImpl implements ActionAsyncService {
     }
 
     @Override
-    public void sendAsyncScenario(Long userId, List<Integer> gestureIds) {
+    public void sendAsyncScenario(User user, List<Integer> gestureIds) {
         try {
             log.info("Полученные жесты: {}", gestureIds);
             ArduinoResponseDto arduinoResponseDto = arduinoClient.batch(ScenarioArduinoDto
                     .builder()
                     .gestureIds(gestureIds)
-                    .userId(userId)
+                    .userId(user.getId())
                     .build());
             log.info(arduinoResponseDto.message());
         } finally {

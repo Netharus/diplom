@@ -1,11 +1,13 @@
 package com.netharus.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netharus.domain.User;
 import com.netharus.domain.enums.Gestures;
 import com.netharus.exceptions.IllegalScenarioFileFormatException;
 import com.netharus.exceptions.IllegalStringFormatException;
 import com.netharus.lock.GlobalLock;
 import com.netharus.service.ActionAsyncService;
+import com.netharus.service.LogService;
 import com.netharus.service.ScenarioService;
 import com.netharus.stringConstants.ErrorMessages;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class ScenarioServiceImpl implements ScenarioService {
 
     private final GlobalLock globalLock;
     private final ActionAsyncService actionAsyncService;
+    private final LogService logService;
 
     @Override
     public byte[] exportScenario(String scenario) throws IOException {
@@ -56,14 +59,15 @@ public class ScenarioServiceImpl implements ScenarioService {
     }
 
     @Override
-    public void sendScenario(Long userId, String scenario) {
+    public void sendScenario(User user, String scenario) {
         if (!isValidFormat(scenario)) {
             log.warn("Блокировка со сценария снята из-за ошибки");
             globalLock.unlock();
+            logService.error(user, ErrorMessages.ILLEGAL_SCENARIO_FILE_FORMAT_EXCEPTION);
             throw new IllegalStringFormatException(ErrorMessages.ILLEGAL_STRING_FORMAT_EXCEPTION);
         }
         List<Integer> gestureIds = parseScenario(scenario);
-        actionAsyncService.sendAsyncScenario(userId, gestureIds);
+        actionAsyncService.sendAsyncScenario(user, gestureIds);
     }
 
     private List<Integer> parseScenario(String scenario) {

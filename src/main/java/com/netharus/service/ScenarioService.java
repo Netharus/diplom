@@ -1,5 +1,6 @@
 package com.netharus.service;
 
+import com.netharus.domain.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -10,5 +11,5 @@ public interface ScenarioService {
 
     int[] importScenario(MultipartFile file) throws IOException;
 
-    void sendScenario(Long userId, String scenario);
+    void sendScenario(User user, String scenario);
 }

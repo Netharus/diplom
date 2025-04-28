@@ -1,5 +1,7 @@
 package com.netharus.service;
 
+import com.netharus.domain.User;
+
 public interface GestureService {
-    void sendGesture(Long userId, Integer gestureId);
+    void sendGesture(User user, Integer gestureId);
 }
