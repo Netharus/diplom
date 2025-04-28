@@ -295,5 +295,43 @@
     </div>
 </div>
 
+<div th:fragment="changePasswordModal">
+    <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePasswordModalLabel">Изменение пароля</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="passwordChangeForm" method="post">
+                        <div class="input-wrapper">
+                            <input type="password" class="form-control" minlength="8"
+                                   maxlength="30" id="currentPassword" name="currentPassword" required placeholder="Текущий пароль">
+                            <button type="button" class="toggle-password" onclick="togglePassword('currentPassword')">
+                                <span id="show-button-text-currentPassword">Показать</span>
+                            </button>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="password" class="form-control" minlength="8"
+                                   maxlength="30" id="newPassword" name="newPassword" required placeholder="Новый пароль">
+                            <button type="button" class="toggle-password" onclick="togglePassword('newPassword')">
+                                <span id="show-button-text-newPassword">Показать</span>
+                            </button>
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="password" class="form-control" minlength="8"
+                                   maxlength="30" id="confirmPassword" name="confirmPassword" required placeholder="Подтвердите новый пароль">
+                            <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                                <span id="show-button-text-confirmPassword">Показать</span>
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="savePasswordBtn">Сохранить изменения</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

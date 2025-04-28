@@ -52,6 +52,12 @@ public class UserServiceImpl implements UserService {
                         String.format(ErrorMessages.USER_NOT_FOUND, userId)));
     }
 
+    @Override
+    public void updatePassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
     @Transactional(readOnly = true)
     protected boolean isExist(String username) {
         return userRepository.findByUsername(username).isPresent();

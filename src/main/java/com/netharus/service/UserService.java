@@ -9,4 +9,6 @@ public interface UserService {
     User createAccount(UserDto userDto);
     
     User findById(Long userId);
+
+    void updatePassword(User byUsername, String password);
 }

@@ -32,7 +32,7 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="icon"><img src="/images/password-icon.svg" alt="Password Icon"/></span>
-                        <input type="password" id="password-input" required th:field="*{password}" minlength="6"
+                        <input type="password" id="password-input" required th:field="*{password}" minlength="8"
                                maxlength="30"
                                placeholder="Введите пароль"/>
                         <button type="button" class="toggle-password" onclick="togglePassword()">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="input-wrapper">
                         <span class="icon"><img src="/images/password-icon.svg" alt="Password Icon"/></span>
-                        <input type="password" required id="repeat-password-input" minlength="6" maxlength="30"
+                        <input type="password" required id="repeat-password-input" minlength="8" maxlength="30"
                                placeholder="Повторите пароль"/>
                         <button type="button" class="toggle-password" onclick="toggleRepeatPassword()">
                             <span id="repeat-button-text">Показать</span>

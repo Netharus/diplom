@@ -222,3 +222,95 @@ body {
     margin-top: 20px;
 }
 
+
+
+
+/* Стили для модального окна */
+.modal-dialog {
+    max-width: 500px;
+    width: 100%;
+    margin: 1.75rem auto;
+}
+
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 18px;
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #fafafa;
+}
+
+.input-wrapper input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 8px;
+    background: transparent;
+}
+
+.toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-left: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password span {
+    font-size: 14px;
+    color: #007bff;
+}
+
+.toggle-password:hover {
+    transform: scale(1.1);
+}
+
+.toggle-password img {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+}
+
+/* Кнопка для сохранения изменений */
+#savePasswordBtn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4F97D0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#savePasswordBtn:hover {
+    background-color: #3a78b8;
+}
+
+
