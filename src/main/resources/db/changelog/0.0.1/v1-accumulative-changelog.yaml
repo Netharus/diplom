@@ -17,3 +17,6 @@ databaseChangeLog:
   - include:
       file: v3-load-admin-data.yaml
       relativeToChangelogFile: true
+  - include:
+      file: v3-add-message-to-log.yaml
+      relativeToChangelogFile: true

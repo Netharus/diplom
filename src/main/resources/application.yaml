@@ -12,5 +12,16 @@ spring:
     hibernate:
       ddl-auto: validate
     show-sql: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          arduinoClient:
+            url: ${ARDUINO_URL}
+            error-decoder: com.netharus.exceptions.decoder.CustomErrorDecoder
+  web:
+    resources:
+      add-mappings: true
+
 server:
   port: ${SERVER_PORT}

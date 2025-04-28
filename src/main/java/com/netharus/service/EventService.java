@@ -12,5 +12,5 @@ public interface EventService {
 
     PageContainer<EventDto> getPageContainer(Pageable pageable, Long userId);
 
-    void createEvent(String scenarioString, User byUsername);
+    void createEvent(String scenarioString, User user);
 }

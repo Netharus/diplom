@@ -44,9 +44,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public void createEvent(String scenarioString, User byUsername) {
+    public void createEvent(String scenarioString, User user) {
         Event event = Event.builder()
-                .user(byUsername)
+                .user(user)
                 .gesture(scenarioString)
                 .build();
         log.info(String.valueOf(eventRepository.save(event)));
