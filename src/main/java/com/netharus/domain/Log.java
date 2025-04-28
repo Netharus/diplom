@@ -43,4 +43,7 @@ public class Log {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Column(name="message", nullable = false)
+    private String message;
 }
