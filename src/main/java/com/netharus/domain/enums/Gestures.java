@@ -25,7 +25,7 @@ public enum Gestures {
     private final int id;
 
     public static String getGestureTitle(int id) {
-        return values()[id-1].getTitle();
+        return values()[id - 1].getTitle();
     }
 
     public static String getGestures(String scenario) {
@@ -34,6 +34,7 @@ public enum Gestures {
                 .toList();
         return gestureIds.stream().map(Gestures::getGestureTitle).collect(Collectors.joining(","));
     }
+
     public static String getGestures(List<Integer> gestureIds) {
         return gestureIds.stream().map(Gestures::getGestureTitle).collect(Collectors.joining(","));
     }

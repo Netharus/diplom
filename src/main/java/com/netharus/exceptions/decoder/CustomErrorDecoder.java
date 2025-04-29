@@ -27,7 +27,7 @@ public class CustomErrorDecoder implements ErrorDecoder {
     @Override
     public Exception decode(String methodKey, Response response) {
         ArduinoResponseDto errorResponse = parseError(response);
-        logService.error(userService.findById(errorResponse.userId()),errorResponse.message());
+        logService.error(userService.findById(errorResponse.userId()), errorResponse.message());
         return switch (response.status()) {
             case 400 -> new BadRequestException(errorResponse.message());
             case 404 -> new NotFoundException(errorResponse.message());

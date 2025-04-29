@@ -2,6 +2,8 @@ package com.netharus.service.impl;
 
 import com.netharus.domain.User;
 import com.netharus.domain.dto.request.UserDto;
+import com.netharus.domain.dto.response.PageContainer;
+import com.netharus.domain.dto.response.UserResponseDto;
 import com.netharus.exceptions.AlreadyExistsException;
 import com.netharus.exceptions.UserNotFoundException;
 import com.netharus.mapper.UserMapper;
@@ -10,9 +12,13 @@ import com.netharus.service.UserService;
 import com.netharus.stringConstants.ErrorMessages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.netharus.service.UtilClass.getPageContainerFromPage;
 
 @Service
 @RequiredArgsConstructor
@@ -46,6 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(
@@ -53,8 +60,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updatePassword(User user, String newPassword) {
         user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageContainer<UserResponseDto> getPageContainer(Pageable pageable, String keyword) {
+        Page<UserResponseDto> usersPage = userRepository.findAll(pageable, keyword)
+                .map(userMapper::toUserResponseDto);
+        return getPageContainerFromPage(usersPage, pageable, keyword);
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(Long userId) {
+        User user = findById(userId);
+        user.setActive(!user.isActive());
         userRepository.save(user);
     }
 

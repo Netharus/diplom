@@ -1,0 +1,65 @@
+.users-container {
+    display: flex;
+    flex-direction: column;
+    margin: 30px;
+    gap: 20px;
+}
+
+.action-bar {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.action-bar-button {
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--regular-color);
+    color: #fff;
+    padding: 8px;
+}
+
+.action-bar-button:hover {
+    transform: scale(1.03);
+}
+
+table {
+    text-align: center;
+}
+table td {
+    vertical-align: middle;
+}
+table td, table th, table tr{
+    border: 1px solid var(--background-color);
+}
+
+.search-input-group {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    width: 450px;
+    padding: 8px;
+    border: 1px solid var(--background-color);
+    border-radius: 8px;
+    background-color: #eaeaea;
+}
+.search-input-group input {
+    border: none;
+    outline: none;
+    flex: 1;
+    background: transparent;
+}
+
+.clear-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 0 8px;
+    color: #555;
+}
+.clear-button:hover {
+    color: #000;
+}

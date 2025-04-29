@@ -44,6 +44,6 @@ public class Log {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name="message", nullable = false)
+    @Column(name = "message", nullable = false)
     private String message;
 }

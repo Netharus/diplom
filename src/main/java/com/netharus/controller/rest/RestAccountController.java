@@ -30,7 +30,7 @@ public class RestAccountController {
     @PutMapping("/updatePassword")
     @ResponseStatus(HttpStatus.OK)
     public String updatePassword(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String password) {
-        userService.updatePassword(userService.findByUsername(userDetails.getUsername()),password);
+        userService.updatePassword(userService.findByUsername(userDetails.getUsername()), password);
         return "Пароль обновлен";
     }
 }
