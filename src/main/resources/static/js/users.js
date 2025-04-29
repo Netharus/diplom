@@ -96,7 +96,7 @@ function updateUsersTable(users) {
             <td>${roleHtml}</td>
             <td>
                 <button class="btn btn-outline-success">Редактировать</button>
-                <button class="btn btn-outline-danger">Удалить</button>
+                <button class="btn btn-outline-danger" onclick="showDeleteConfirmationModal(${user.id})">Удалить</button>
             </td>
         `;
         tbody.appendChild(row);
@@ -213,4 +213,35 @@ function togglePassword(fieldId) {
     const isPassword = input.type === "password";
     input.type = isPassword ? "text" : "password";
     buttonText.textContent = isPassword ? "Скрыть" : "Показать";
+}
+
+let userIdToDelete = null;
+
+function showDeleteConfirmationModal(userId) {
+    userIdToDelete = userId;
+    const modal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+    modal.show();
+}
+
+function deleteUser() {
+    if (userIdToDelete) {
+        // Отправка запроса на удаление пользователя
+        $.ajax({
+            url: `/api/admin/users/${userIdToDelete}`,
+            type: 'DELETE',
+            success: function(response) {
+                $('#successToastText').text("Пользователь удален успешно");
+                new bootstrap.Toast(document.getElementById('successToast')).show();
+
+                fetchUpdatedUserTable(); // Обновление таблицы пользователей (если нужно)
+            },
+            error: function(error) {
+                showErrorToast(error.message);
+            }
+        });
+
+        // Закрываем модальное окно
+        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal'));
+        modal.hide();
+    }
 }

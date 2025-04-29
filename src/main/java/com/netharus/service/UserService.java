@@ -26,4 +26,6 @@ public interface UserService {
     boolean isExist(String username);
 
     boolean isUserUnique(String username, Long id);
+
+    void deleteUser(Long userId);
 }

@@ -111,4 +111,10 @@ public class UserServiceImpl implements UserService {
                 .filter(userId -> userId.equals(id))
                 .isPresent();
     }
+
+    @Override
+    @Transactional
+    public void deleteUser(Long userId) {
+        userRepository.delete(findById(userId));
+    }
 }
