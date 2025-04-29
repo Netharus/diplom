@@ -1,10 +1,12 @@
 package com.netharus.service;
 
 import com.netharus.domain.User;
+import com.netharus.domain.dto.request.AdminUserCreateDto;
 import com.netharus.domain.dto.request.UserDto;
 import com.netharus.domain.dto.response.PageContainer;
 import com.netharus.domain.dto.response.UserResponseDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
     User findByUsername(String username);
@@ -18,4 +20,10 @@ public interface UserService {
     PageContainer<UserResponseDto> getPageContainer(Pageable pageable, String keyword);
 
     void updateStatus(Long userId);
+
+    void createUser(AdminUserCreateDto adminUserCreateDto);
+
+    boolean isExist(String username);
+
+    boolean isUserUnique(String username, Long id);
 }

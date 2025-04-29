@@ -1,6 +1,7 @@
 package com.netharus.service.impl;
 
 import com.netharus.domain.User;
+import com.netharus.domain.dto.request.AdminUserCreateDto;
 import com.netharus.domain.dto.request.UserDto;
 import com.netharus.domain.dto.response.PageContainer;
 import com.netharus.domain.dto.response.UserResponseDto;
@@ -82,13 +83,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public void createUser(AdminUserCreateDto adminUserCreateDto) {
+        if (isExist(adminUserCreateDto.username())) {
+            throw new AlreadyExistsException(ErrorMessages.USER_ALREADY_EXIST);
+        }
+        User user = userMapper.fromAdminUserCreateDto(adminUserCreateDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        log.info("Создан пользователь администратором: {}", user.getUsername());
+
+        userRepository.save(user);
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    protected boolean isExist(String username) {
+    public boolean isExist(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
 
     @Transactional(readOnly = true)
-    protected boolean isUserUnique(String username, Long id) {
+    @Override
+    public boolean isUserUnique(String username, Long id) {
         return userRepository.findByUsername(username)
                 .map(User::getId)
                 .filter(userId -> userId.equals(id))

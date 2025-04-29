@@ -2,6 +2,8 @@ package com.netharus.controller;
 
 import com.netharus.domain.dto.response.EventDto;
 import com.netharus.domain.dto.response.NotificationDto;
+import com.netharus.domain.dto.response.PageContainer;
+import com.netharus.domain.dto.response.UserResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -25,5 +27,11 @@ public class WebSocketController {
     public List<EventDto> sendRecentEvents(List<EventDto> eventDtoList) {
         log.info("Получен список последних событий: {}", eventDtoList);
         return eventDtoList;
+    }
+
+    @MessageMapping("/users")
+    @SendTo("/topic/users")
+    public PageContainer<UserResponseDto> sendUsers(PageContainer<UserResponseDto> userResponsePage) {
+        return userResponsePage;
     }
 }

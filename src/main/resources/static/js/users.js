@@ -36,7 +36,6 @@ function fetchUpdatedUserTable() {
     const sortDir = urlParams.get("sortDir") || "asc";
     const keyword = urlParams.get("keyword") || "";
 
-    // Формируем строку запроса
     const queryString = `?page=${page}&sortField=${sortField}&sortDir=${sortDir}${keyword ? `&keyword=${keyword}` : ''}`;
 
     fetch(`/api/admin/users${queryString}`, {
@@ -115,6 +114,7 @@ function clearSearch() {
     toggleClearButton();
     searchUsers();
 }
+
 function searchUsers() {
     const keyword = document.getElementById('searchInput').value.trim();
     const queryString = keyword ? `?keyword=${encodeURIComponent(keyword)}` : '';
@@ -135,4 +135,82 @@ function searchUsers() {
         .catch(error => {
             console.error("Ошибка при поиске пользователей:", error);
         });
+}
+function checkUsernameUniqueAndSubmit() {
+    const form = document.getElementById("createUserForm");
+    const usernameInput = $("#username");
+    const passwordInput = $("#password");
+    const roleInput = $("#role");
+    const activeInput = $("#active");
+
+    const username = usernameInput.val().trim();
+    const password = passwordInput.val();
+    const role = roleInput.val();
+    const active = activeInput.is(":checked");
+
+    if (!username || !password || !role) {
+        showErrorToast("Все поля должны быть заполнены");
+        return;
+    }
+
+    $.ajax({
+        url: '/api/admin/users/isExistUsernameCreate',
+        type: 'GET',
+        data: { username: username },
+        success: function (exists) {
+            if (exists) {
+                usernameInput[0].setCustomValidity("Имя пользователя уже занято");
+                usernameInput[0].reportValidity();
+            } else {
+                usernameInput[0].setCustomValidity("");
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                const userData = {
+                    username: username,
+                    password: password,
+                    role: role,
+                    active: active
+                };
+
+                $.ajax({
+                    url: '/api/admin/users',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(userData),
+                    success: function (result) {
+                        $('#successToastText').text(result);
+                        new bootstrap.Toast(document.getElementById('successToast')).show();
+
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('createUserModal'));
+                        modal.hide();
+
+                        $('#createUserForm')[0].reset();
+                        fetchUpdatedUserTable(); // Обновление таблицы пользователей
+                    },
+                    error: function () {
+                        showErrorToast("Ошибка при создании пользователя");
+                    }
+                });
+            }
+        },
+        error: function () {
+            showErrorToast("Ошибка при проверке имени пользователя");
+        }
+    });
+}
+
+function showErrorToast(message) {
+    document.getElementById('toastText').textContent = message;
+    new bootstrap.Toast(document.getElementById('toast')).show();
+}
+
+function togglePassword(fieldId) {
+    const input = document.getElementById(fieldId);
+    const buttonText = document.getElementById(`show-button-text-${fieldId}`);
+    const isPassword = input.type === "password";
+    input.type = isPassword ? "text" : "password";
+    buttonText.textContent = isPassword ? "Скрыть" : "Показать";
 }
