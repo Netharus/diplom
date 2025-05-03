@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     public boolean isUserUnique(String username, Long id) {
         AtomicBoolean flag = new AtomicBoolean(true);
         userRepository.findByUsername(username).ifPresent(user1 -> {
-            flag.set(user1.getId() == id);
+            flag.set(Objects.equals(user1.getId(), id));
         });
         return flag.get();
     }
