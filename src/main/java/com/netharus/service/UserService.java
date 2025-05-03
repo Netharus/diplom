@@ -2,11 +2,11 @@ package com.netharus.service;
 
 import com.netharus.domain.User;
 import com.netharus.domain.dto.request.AdminUserCreateDto;
+import com.netharus.domain.dto.request.AdminUserUpdateDto;
 import com.netharus.domain.dto.request.UserDto;
 import com.netharus.domain.dto.response.PageContainer;
 import com.netharus.domain.dto.response.UserResponseDto;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface UserService {
     User findByUsername(String username);
@@ -28,4 +28,6 @@ public interface UserService {
     boolean isUserUnique(String username, Long id);
 
     void deleteUser(Long userId);
+
+    void updateUser(AdminUserUpdateDto adminUserUpdateDto);
 }

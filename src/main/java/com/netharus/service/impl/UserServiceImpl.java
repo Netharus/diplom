@@ -2,6 +2,7 @@ package com.netharus.service.impl;
 
 import com.netharus.domain.User;
 import com.netharus.domain.dto.request.AdminUserCreateDto;
+import com.netharus.domain.dto.request.AdminUserUpdateDto;
 import com.netharus.domain.dto.request.UserDto;
 import com.netharus.domain.dto.response.PageContainer;
 import com.netharus.domain.dto.response.UserResponseDto;
@@ -18,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.netharus.service.UtilClass.getPageContainerFromPage;
 
@@ -106,15 +109,36 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public boolean isUserUnique(String username, Long id) {
-        return userRepository.findByUsername(username)
-                .map(User::getId)
-                .filter(userId -> userId.equals(id))
-                .isPresent();
+        AtomicBoolean flag = new AtomicBoolean(true);
+        userRepository.findByUsername(username).ifPresent(user1 -> {
+            flag.set(user1.getId() == id);
+        });
+        return flag.get();
     }
 
     @Override
     @Transactional
     public void deleteUser(Long userId) {
         userRepository.delete(findById(userId));
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(AdminUserUpdateDto adminUserUpdateDto) {
+        User existingUser = findById(adminUserUpdateDto.id());
+        if (!isUserUnique(adminUserUpdateDto.username(), adminUserUpdateDto.id())) {
+            throw new AlreadyExistsException(ErrorMessages.USER_ALREADY_EXIST);
+        }
+
+        existingUser.setUsername(adminUserUpdateDto.username());
+
+        if (!adminUserUpdateDto.password().isEmpty())
+            existingUser.setPassword(passwordEncoder.encode(adminUserUpdateDto.password()));
+
+        existingUser.setRole(adminUserUpdateDto.role());
+        existingUser.setActive(adminUserUpdateDto.active());
+        existingUser.setId(adminUserUpdateDto.id());
+
+        userRepository.save(existingUser);
     }
 }

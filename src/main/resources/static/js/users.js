@@ -95,7 +95,14 @@ function updateUsersTable(users) {
             </td>
             <td>${roleHtml}</td>
             <td>
-                <button class="btn btn-outline-success">Редактировать</button>
+                <button
+                        class="btn btn-outline-success update-button"
+                        data-id="${user.id}"
+                        data-username="${user.username}"
+                        data-role="${user.role}"
+                        data-active="${user.active}">
+                    Редактировать
+                </button>
                 <button class="btn btn-outline-danger" onclick="showDeleteConfirmationModal(${user.id})">Удалить</button>
             </td>
         `;
@@ -244,4 +251,104 @@ function deleteUser() {
         const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal'));
         modal.hide();
     }
+}
+
+function mapRoleToEnum(roleString) {
+    switch (roleString) {
+        case "Администратор":
+            return "ADMIN";
+        case "Пользователь":
+            return "USER";
+        default:
+            return "USER"; // значение по умолчанию
+    }
+}
+
+function reverseMapRole(roleEnum) {
+    switch (roleEnum) {
+        case "ADMIN":
+            return "Администратор";
+        case "USER":
+            return "Пользователь";
+        default:
+            return "Пользователь";
+    }
+}
+
+$(document).on("click", ".update-button", function () {
+    const button = $(this);
+    const user = {
+        id: button.data("id"),
+        username: button.data("username"),
+        role: button.data("role"),
+        active: button.data("active")
+    };
+    openUpdateModal(user);
+});
+
+function openUpdateModal(user) {
+    $("#updateUserId").val(user.id);
+    $("#updateUsername").val(user.username);
+    $("#updateRole").val(reverseMapRole(user.role));
+    $("#updateActive").prop("checked", user.active);
+    $("#updatePassword").val("");
+
+    const modal = new bootstrap.Modal(document.getElementById('updateUserModal'));
+    modal.show();
+}
+
+
+function submitUserUpdate() {
+    const id = $("#updateUserId").val();
+    const username = $("#updateUsername").val().trim();
+    const password = $("#updatePassword").val();
+    const roleString = $("#updateRole").val();
+    const active = $("#updateActive").is(":checked");
+
+    if (!username || !roleString) {
+        showErrorToast("Имя пользователя и роль обязательны");
+        return;
+    }
+
+    const roleEnum = mapRoleToEnum(roleString);
+
+    const data = {
+        id: parseInt(id),
+        username: username,
+        password: password || "",
+        role: roleEnum,
+        active: active
+    };
+
+    $.ajax({
+        url: '/api/admin/users',
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success: function (result) {
+            $('#successToastText').text(result);
+            new bootstrap.Toast(document.getElementById('successToast')).show();
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('updateUserModal'));
+            modal.hide();
+            $('#updateUserId').val('');
+            $('#updateUsername').val('');
+            $('#updatePassword').val('');
+            $('#updateRole').val('Пользователь');
+            $('#updateActive').prop('checked', false);
+            fetchUpdatedUserTable();
+        },
+        error: function (xhr) {
+            let errorText = "Ошибка при обновлении пользователя";
+            try {
+                const response = JSON.parse(xhr.responseText);
+                if (response.message) {
+                    errorText = response.message;
+                }
+            } catch (e) {
+                console.warn("Ошибка парсинга ответа:", e);
+            }
+            showErrorToast(errorText);
+        }
+    });
 }
