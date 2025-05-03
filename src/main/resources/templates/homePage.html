@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:replace="~{fragments/fragments::page_head}"></th:block>
 </head>
@@ -9,7 +9,7 @@
     <script src="/js/accountChangePassword.js"></script>
     <div class="page-sidebar" id="sidebar">
         <div class="sidebar-header">
-            <button class="header-button">
+            <button class="header-username" disabled>
                 <span class="left" th:text="${username}">Andrew Smith</span>
             </button>
             <button class="header-button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
@@ -51,28 +51,20 @@
                         <span>Сценарий</span>
                     </button>
                 </li>
-                <li>
+                <li sec:authorize="hasAuthority('ADMIN')">
                     <button class="menu-button"
-                            th:classappend="${fragment.equals('scenario')} ? ' active'"
-                            onclick="document.location='/scenario'">
-                        <img class="button-icon" src="/images/Scenarios.png" alt="Scenarios Image">
-                        <span>Сценарий</span>
+                            th:classappend="${fragment.equals('logs')} ? ' active'"
+                            onclick="document.location='/admin/logs'">
+                        <img class="button-icon" src="/images/logs.svg" alt="Logs Image">
+                        <span>Логи</span>
                     </button>
                 </li>
-                <li>
+                <li sec:authorize="hasAuthority('ADMIN')">
                     <button class="menu-button"
-                            th:classappend="${fragment.equals('scenario')} ? ' active'"
-                            onclick="document.location='/scenario'">
-                        <img class="button-icon" src="/images/Scenarios.png" alt="Scenarios Image">
-                        <span>Сценарий</span>
-                    </button>
-                </li>
-                <li>
-                    <button class="menu-button"
-                            th:classappend="${fragment.equals('scenario')} ? ' active'"
-                            onclick="document.location='/scenario'">
-                        <img class="button-icon" src="/images/Scenarios.png" alt="Scenarios Image">
-                        <span>Сценарий</span>
+                            th:classappend="${fragment.equals('users')} ? ' active'"
+                            onclick="document.location='/admin/users'">
+                        <img class="button-icon" src="/images/users.svg" alt="Users Image">
+                        <span>Пользователи</span>
                     </button>
                 </li>
             </ul>
@@ -86,7 +78,8 @@
             <form th:action="@{/logout}" method="post" name="logoutForm">
                 <button id="logoutLink" class="footer-button logout-button" type="submit">
                     <img class="button-icon" src="/images/Logout.png"
-                         alt="Logout account image"><span class="hover-underline-animation left">Выйти из аккаунта</span>
+                         alt="Logout account image"><span
+                        class="hover-underline-animation left">Выйти из аккаунта</span>
                 </button>
             </form>
         </div>

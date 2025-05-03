@@ -37,16 +37,25 @@ body {
     padding: 24px 0 0;
 }
 
+.header-username {
+    background-color: var(--regular-color);
+    border: 0;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 800;
+}
+
 .header-button {
     background-color: var(--regular-color);
     border: 0;
     color: white;
     font-family: var(--font-body);
-    font-size: 18px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 500;
+    font-weight: 600;
 }
-
 /* === Sidebar Menu === */
 .page-sidebar .menu {
     align-items: flex-start;

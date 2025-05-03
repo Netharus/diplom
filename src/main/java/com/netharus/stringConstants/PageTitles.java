@@ -8,7 +8,9 @@ import lombok.Getter;
 public enum PageTitles {
     HOME_PAGE("ГЛАВНАЯ СТРАНИЦА", "homePage"),
     SCENARIO_PAGE("СЦЕНАРИЙ", "scenario"),
-    HISTORY_PAGE("ИСТОРИЯ", "history");
+    HISTORY_PAGE("ИСТОРИЯ", "history"),
+    USERS_PAGE("ПОЛЬЗОВАТЕЛИ", "users"),
+    LOGS_PAGE("ЛОГИ", "logs");
 
     private final String pageTitle;
     private final String fragment;

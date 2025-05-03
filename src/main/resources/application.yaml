@@ -25,3 +25,6 @@ spring:
 
 server:
   port: ${SERVER_PORT}
+logging:
+  level:
+    org.springframework.web: DEBUG
