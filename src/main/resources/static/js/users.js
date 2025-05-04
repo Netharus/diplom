@@ -78,18 +78,6 @@ function updateUsersTable(users) {
     });
 }
 
-function toggleClearButton() {
-    const input = document.getElementById('searchInput');
-    const button = document.getElementById('clearSearchButton');
-    button.style.display = input.value.trim() ? 'inline' : 'none';
-}
-
-function clearSearch() {
-    document.getElementById('searchInput').value = '';
-    toggleClearButton();
-    searchUsers();
-}
-
 function searchUsers() {
     const keyword = document.getElementById('searchInput').value.trim();
     const queryString = keyword ? `?keyword=${encodeURIComponent(keyword)}` : '';
@@ -165,7 +153,11 @@ function togglePassword(fieldId) {
     input.type = isPassword ? "text" : "password";
     buttonText.textContent = isPassword ? "Скрыть" : "Показать";
 }
-
+function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    toggleClearButton();
+    searchUsers();
+}
 let userIdToDelete = null;
 
 function showDeleteConfirmationModal(userId) {

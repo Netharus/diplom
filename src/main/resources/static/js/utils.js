@@ -15,3 +15,8 @@ function showErrorToast(message) {
     document.getElementById('toastText').textContent = message;
     new bootstrap.Toast(document.getElementById('toast')).show();
 }
+function toggleClearButton() {
+    const input = document.getElementById('searchInput');
+    const button = document.getElementById('clearSearchButton');
+    button.style.display = input.value.trim() ? 'inline' : 'none';
+}
