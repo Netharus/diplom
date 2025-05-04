@@ -385,7 +385,7 @@
                                 role="button"
                                 style="cursor: pointer;"
                                 th:data-user-id="${userResponseDto.id}"
-                                th:class="${userResponseDto.active} ? 'badge bg-success' : 'badge bg-warning text-dark'"
+                                th:class="${userResponseDto.active} ? 'badge bg-success active-badge' : 'badge bg-warning text-dark active-badge'"
                                 th:text="${userResponseDto.active} ? 'Активен' : 'Не активен'"
                                 onclick="changeUserStatus(this)">
                         </span>

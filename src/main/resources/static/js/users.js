@@ -62,7 +62,7 @@ function updateUsersTable(users) {
             <td>${user.id}</td>
             <td>${user.username}</td>
             <td>
-                <span role="button" style="cursor: pointer;" data-user-id="${user.id}" class="badge ${activeBadgeClass}" onclick="changeUserStatus(this)">
+                <span role="button" style="cursor: pointer;" data-user-id="${user.id}" class="badge ${activeBadgeClass} active-badge" onclick="changeUserStatus(this)">
                     ${activeText}
                 </span>
             </td>
