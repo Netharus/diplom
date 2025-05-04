@@ -3,34 +3,24 @@ function changeUserStatus(element) {
 
     fetch(`/api/admin/users/changeStatus/${userId}`, {
         method: "PATCH",
-        headers: {
-            "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" }
     })
         .then(response => {
             if (!response.ok) throw new Error("Ошибка при обновлении статуса");
             return response.text();
         })
         .then(result => {
-            // Показываем уведомление об успешном обновлении
             document.getElementById('successToastText').textContent = result;
-            const successToast = new bootstrap.Toast(document.getElementById('successToast'));
-            successToast.show();
-
-            // Обновляем таблицу пользователей после изменения статуса
+            new bootstrap.Toast(document.getElementById('successToast')).show();
             fetchUpdatedUserTable();
         })
         .catch(error => {
-            // Показываем уведомление об ошибке
-            document.getElementById('toastText').textContent = error.message;
-            const errorToast = new bootstrap.Toast(document.getElementById('toast'));
-            errorToast.show();
+            showErrorToast(error.message);
         });
 }
 
 function fetchUpdatedUserTable() {
     const urlParams = new URLSearchParams(window.location.search);
-
     const page = urlParams.get("page") || 0;
     const sortField = urlParams.get("sortField") || "active";
     const sortDir = urlParams.get("sortDir") || "asc";
@@ -39,68 +29,46 @@ function fetchUpdatedUserTable() {
     const queryString = `?page=${page}&sortField=${sortField}&sortDir=${sortDir}${keyword ? `&keyword=${keyword}` : ''}`;
 
     fetch(`/api/admin/users${queryString}`, {
-        headers: {
-            "Accept": "application/json"
-        }
+        headers: { "Accept": "application/json" }
     })
         .then(response => {
             if (!response.ok) throw new Error("Ошибка при загрузке пользователей");
-            return response.json(); // Возвращаем JSON
+            return response.json();
         })
-        .then(data => {
-            updateUsersTable(data.list);
-        })
-        .catch(error => {
-            console.error("Ошибка при обновлении таблицы:", error);
-        });
+        .then(data => updateUsersTable(data.list))
+        .catch(error => console.error("Ошибка при обновлении таблицы:", error));
 }
 
 function updateUsersTable(users) {
     const tbody = document.querySelector('table tbody');
-    tbody.innerHTML = ''; // Очищаем текущие строки таблицы
+    tbody.innerHTML = '';
 
     if (!users || users.length === 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td colspan="5" class="text-center text-muted">Пользователи не найдены</td>`;
-        tbody.appendChild(row);
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Пользователи не найдены</td></tr>`;
         return;
     }
 
     users.forEach(user => {
-        const row = document.createElement('tr');
-
         const isActive = user.active;
         const activeBadgeClass = isActive ? 'bg-success' : 'bg-warning text-dark';
         const activeText = isActive ? 'Активен' : 'Не активен';
 
         let roleHtml = '<span class="badge bg-secondary">Неизвестная роль</span>';
-        if (user.role === 'Администратор') {
-            roleHtml = '<span class="badge bg-success">Администратор</span>';
-        } else if (user.role === 'Пользователь') {
-            roleHtml = '<span class="badge bg-primary">Пользователь</span>';
-        }
+        if (user.role === 'Администратор') roleHtml = '<span class="badge bg-success">Администратор</span>';
+        else if (user.role === 'Пользователь') roleHtml = '<span class="badge bg-primary">Пользователь</span>';
 
+        const row = document.createElement('tr');
         row.innerHTML = `
             <td>${user.id}</td>
             <td>${user.username}</td>
             <td>
-                <span 
-                    role="button"
-                    style="cursor: pointer;"
-                    data-user-id="${user.id}"
-                    class="badge ${activeBadgeClass}"
-                    onclick="changeUserStatus(this)">
+                <span role="button" style="cursor: pointer;" data-user-id="${user.id}" class="badge ${activeBadgeClass}" onclick="changeUserStatus(this)">
                     ${activeText}
                 </span>
             </td>
             <td>${roleHtml}</td>
             <td>
-                <button
-                        class="btn btn-outline-success update-button"
-                        data-id="${user.id}"
-                        data-username="${user.username}"
-                        data-role="${user.role}"
-                        data-active="${user.active}">
+                <button class="btn btn-outline-success update-button" data-id="${user.id}" data-username="${user.username}" data-role="${user.role}" data-active="${user.active}">
                     Редактировать
                 </button>
                 <button class="btn btn-outline-danger" onclick="showDeleteConfirmationModal(${user.id})">Удалить</button>
@@ -109,6 +77,7 @@ function updateUsersTable(users) {
         tbody.appendChild(row);
     });
 }
+
 function toggleClearButton() {
     const input = document.getElementById('searchInput');
     const button = document.getElementById('clearSearchButton');
@@ -116,8 +85,7 @@ function toggleClearButton() {
 }
 
 function clearSearch() {
-    const input = document.getElementById('searchInput');
-    input.value = '';
+    document.getElementById('searchInput').value = '';
     toggleClearButton();
     searchUsers();
 }
@@ -128,33 +96,27 @@ function searchUsers() {
 
     fetch(`/api/admin/users${queryString}`, {
         method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
+        headers: { 'Accept': 'application/json' }
     })
         .then(response => {
             if (!response.ok) throw new Error("Ошибка при загрузке пользователей");
             return response.json();
         })
-        .then(data => {
-            updateUsersTable(data.list);
-        })
-        .catch(error => {
-            console.error("Ошибка при поиске пользователей:", error);
-        });
+        .then(data => updateUsersTable(data.list))
+        .catch(error => console.error("Ошибка при поиске пользователей:", error));
 }
+
 function checkUsernameUniqueAndSubmit() {
     const form = document.getElementById("createUserForm");
-    const usernameInput = $("#username");
-    const passwordInput = $("#password");
-    const roleInput = $("#role");
-    const activeInput = $("#active");
+    const username = $("#username").val().trim();
+    const password = $("#password").val();
+    const role = $("#role").val();
+    const active = $("#active").is(":checked");
 
-    const username = usernameInput.val().trim();
-    const password = passwordInput.val();
-    const role = roleInput.val();
-    const active = activeInput.is(":checked");
-
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
     if (!username || !password || !role) {
         showErrorToast("Все поля должны быть заполнены");
         return;
@@ -163,55 +125,37 @@ function checkUsernameUniqueAndSubmit() {
     $.ajax({
         url: '/api/admin/users/isExistUsernameCreate',
         type: 'GET',
-        data: { username: username },
+        data: { username },
         success: function (exists) {
             if (exists) {
-                usernameInput[0].setCustomValidity("Имя пользователя уже занято");
-                usernameInput[0].reportValidity();
-            } else {
-                usernameInput[0].setCustomValidity("");
-                if (!form.checkValidity()) {
-                    form.reportValidity();
-                    return;
-                }
-
-                const userData = {
-                    username: username,
-                    password: password,
-                    role: role,
-                    active: active
-                };
-
-                $.ajax({
-                    url: '/api/admin/users',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(userData),
-                    success: function (result) {
-                        $('#successToastText').text(result);
-                        new bootstrap.Toast(document.getElementById('successToast')).show();
-
-                        const modal = bootstrap.Modal.getInstance(document.getElementById('createUserModal'));
-                        modal.hide();
-
-                        $('#createUserForm')[0].reset();
-                        fetchUpdatedUserTable(); // Обновление таблицы пользователей
-                    },
-                    error: function () {
-                        showErrorToast("Ошибка при создании пользователя");
-                    }
-                });
+                showErrorToast("Имя пользователя уже занято");
+                return;
             }
+
+            const userData = { username, password, role, active };
+
+            $.ajax({
+                url: '/api/admin/users',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function (result) {
+                    $('#successToastText').text(result);
+                    new bootstrap.Toast(document.getElementById('successToast')).show();
+
+                    bootstrap.Modal.getInstance(document.getElementById('createUserModal')).hide();
+                    $('#createUserForm')[0].reset();
+                    fetchUpdatedUserTable();
+                },
+                error: function (xhr) {
+                    handleAjaxError(xhr, "Ошибка при создании пользователя");
+                }
+            });
         },
-        error: function () {
-            showErrorToast("Ошибка при проверке имени пользователя");
+        error: function (xhr) {
+            handleAjaxError(xhr, "Ошибка при проверке имени пользователя");
         }
     });
-}
-
-function showErrorToast(message) {
-    document.getElementById('toastText').textContent = message;
-    new bootstrap.Toast(document.getElementById('toast')).show();
 }
 
 function togglePassword(fieldId) {
@@ -226,64 +170,44 @@ let userIdToDelete = null;
 
 function showDeleteConfirmationModal(userId) {
     userIdToDelete = userId;
-    const modal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
-    modal.show();
+    new bootstrap.Modal(document.getElementById('deleteConfirmationModal')).show();
 }
 
 function deleteUser() {
-    if (userIdToDelete) {
-        // Отправка запроса на удаление пользователя
-        $.ajax({
-            url: `/api/admin/users/${userIdToDelete}`,
-            type: 'DELETE',
-            success: function(response) {
-                $('#successToastText').text("Пользователь удален успешно");
-                new bootstrap.Toast(document.getElementById('successToast')).show();
+    if (!userIdToDelete) return;
 
-                fetchUpdatedUserTable(); // Обновление таблицы пользователей (если нужно)
-            },
-            error: function(error) {
-                showErrorToast(error.message);
-            }
-        });
+    $.ajax({
+        url: `/api/admin/users/${userIdToDelete}`,
+        type: 'DELETE',
+        success: function () {
+            $('#successToastText').text("Пользователь удален успешно");
+            new bootstrap.Toast(document.getElementById('successToast')).show();
+            fetchUpdatedUserTable();
+        },
+        error: function (xhr) {
+            handleAjaxError(xhr, "Ошибка при удалении пользователя");
+        }
+    });
 
-        // Закрываем модальное окно
-        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal'));
-        modal.hide();
-    }
+    bootstrap.Modal.getInstance(document.getElementById('deleteConfirmationModal')).hide();
 }
 
 function mapRoleToEnum(roleString) {
-    switch (roleString) {
-        case "Администратор":
-            return "ADMIN";
-        case "Пользователь":
-            return "USER";
-        default:
-            return "USER"; // значение по умолчанию
-    }
+    return roleString === "Администратор" ? "ADMIN" : "USER";
 }
 
 function reverseMapRole(roleEnum) {
-    switch (roleEnum) {
-        case "ADMIN":
-            return "Администратор";
-        case "USER":
-            return "Пользователь";
-        default:
-            return "Пользователь";
-    }
+    return roleEnum === "ADMIN" ? "Администратор" : "Пользователь";
 }
 
 $(document).on("click", ".update-button", function () {
     const button = $(this);
-    const user = {
+    openUpdateModal({
         id: button.data("id"),
         username: button.data("username"),
         role: button.data("role"),
         active: button.data("active")
-    };
-    openUpdateModal(user);
+    });
 });
 
 function openUpdateModal(user) {
@@ -293,10 +217,8 @@ function openUpdateModal(user) {
     $("#updateActive").prop("checked", user.active);
     $("#updatePassword").val("");
 
-    const modal = new bootstrap.Modal(document.getElementById('updateUserModal'));
-    modal.show();
+    new bootstrap.Modal(document.getElementById('updateUserModal')).show();
 }
-
 
 function submitUserUpdate() {
     const id = $("#updateUserId").val();
@@ -311,14 +233,7 @@ function submitUserUpdate() {
     }
 
     const roleEnum = mapRoleToEnum(roleString);
-
-    const data = {
-        id: parseInt(id),
-        username: username,
-        password: password || "",
-        role: roleEnum,
-        active: active
-    };
+    const data = { id: parseInt(id), username, password: password || "", role: roleEnum, active };
 
     $.ajax({
         url: '/api/admin/users',
@@ -329,26 +244,11 @@ function submitUserUpdate() {
             $('#successToastText').text(result);
             new bootstrap.Toast(document.getElementById('successToast')).show();
 
-            const modal = bootstrap.Modal.getInstance(document.getElementById('updateUserModal'));
-            modal.hide();
-            $('#updateUserId').val('');
-            $('#updateUsername').val('');
-            $('#updatePassword').val('');
-            $('#updateRole').val('Пользователь');
-            $('#updateActive').prop('checked', false);
+            bootstrap.Modal.getInstance(document.getElementById('updateUserModal')).hide();
             fetchUpdatedUserTable();
         },
         error: function (xhr) {
-            let errorText = "Ошибка при обновлении пользователя";
-            try {
-                const response = JSON.parse(xhr.responseText);
-                if (response.message) {
-                    errorText = response.message;
-                }
-            } catch (e) {
-                console.warn("Ошибка парсинга ответа:", e);
-            }
-            showErrorToast(errorText);
+            handleAjaxError(xhr, "Ошибка при обновлении пользователя");
         }
     });
 }
