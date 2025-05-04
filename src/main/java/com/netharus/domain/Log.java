@@ -34,7 +34,7 @@ public class Log {
 
     @Builder.Default
     @Column(name = "date_time", nullable = false)
-    private String dateTime = LocalDateTime.now().toString();
+    private LocalDateTime dateTime = LocalDateTime.now();
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
