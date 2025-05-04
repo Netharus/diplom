@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LogRepository extends JpaRepository<Log, Long> {
 
-    @Query("select l from Log l where cast(l.id as string ) ilike concat('%',:keyword,'%')" +
-            "or lower(l.status) ilike (concat('%',:keyword,'%'))" +
+    @Query("select l from Log l where cast(l.id as string ) ilike concat('%',:keyword,'%') " +
+            "or lower(l.status) ilike (concat('%',:keyword,'%')) " +
             "or cast(l.dateTime as string ) ilike concat('%',:keyword,'%')")
     Page<Log> findAll(Pageable pageable, @Param("keyword") String keyword);
 }
