@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4.2.1
+      author: Mikhail Kondratsiuk
+      changes:
+        - dropColumn:
+            tableName: logs
+            columnName: date_time
+        - addColumn:
+            tableName: logs
+            columns:
+              - column:
+                  name: date_time
+                  type: timestamp
+                  constraints:
+                    nullable: false

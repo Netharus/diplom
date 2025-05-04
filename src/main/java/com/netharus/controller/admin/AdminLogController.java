@@ -1,10 +1,11 @@
 package com.netharus.controller.admin;
 
-import com.netharus.service.UserService;
+import com.netharus.service.LogService;
 import com.netharus.stringConstants.PageTitles;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,23 +19,23 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 @Controller
-@RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/admin/users")
-public class AdminUserController {
+@RequiredArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
+@RequestMapping("/admin/logs")
+public class AdminLogController {
 
-    private final UserService userService;
+    private final LogService logService;
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ModelAndView users(@PageableDefault(sort = "active") Pageable pageable,
+    public ModelAndView users(@PageableDefault(sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable,
                               @RequestParam(defaultValue = "") String keyword,
                               @AuthenticationPrincipal UserDetails user) {
         ModelAndView mav = new ModelAndView("homePage");
         mav.addAllObjects(Map.of("username", user.getUsername(),
-                        "pageTitle", PageTitles.USERS_PAGE.getPageTitle(),
-                        "fragment", PageTitles.USERS_PAGE.getFragment(),
-                        "pageContainer", userService.getPageContainer(pageable, keyword)
+                        "pageTitle", PageTitles.LOGS_PAGE.getPageTitle(),
+                        "fragment", PageTitles.LOGS_PAGE.getFragment(),
+                        "pageContainer", logService.getPageContainer(pageable, keyword)
                 )
         );
         return mav;
