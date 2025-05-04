@@ -63,3 +63,6 @@ table td, table th, table tr{
 .clear-button:hover {
     color: #000;
 }
+.active-badge:hover {
+    transform: scale(1.03);
+}
