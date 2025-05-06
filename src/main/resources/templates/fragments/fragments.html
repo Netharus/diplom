@@ -15,6 +15,8 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/intro.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intro.js@7.2.0/minified/introjs.min.css">
 </head>
 
 <body>
@@ -36,7 +38,7 @@
     <script src="/js/homePage.js"></script>
     <div class="home-page-container">
         <div class="gesture-box">
-            <span class="topic-name">GESTURES</span>
+            <span class="topic-name">ЖЕСТЫ</span>
             <div class="gestures">
                 <div th:each="gesture : ${gestures}">
                     <button class="gesture-button" th:value="${gesture.id}"
@@ -165,12 +167,26 @@
         </table>
         <div th:replace="~{fragments/fragments::pagination('/history','Действия')}"></div>
     </div>
+    <script>
+        document.querySelectorAll('.sort-link').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const moduleURL = this.dataset.moduleUrl;
+                const fieldName = this.dataset.fieldName;
+                const sortDir = this.dataset.sortDir;
+                sort(moduleURL, fieldName, sortDir);
+            });
+        });
+    </script>
 </div>
 
 <!--TABLE FRAGMENT-->
 <th th:fragment="column_link(moduleURL, fieldName, columnLabel)">
-    <a th:href="@{${moduleURL}+'?page='+${pageContainer.currentPage}+'&sort='+${fieldName}+','+${pageContainer.sortField != fieldName ? pageContainer.sortDir : pageContainer.reverseSortDir}+${pageContainer.keyword != null ? '&keyword='+pageContainer.keyword : ''}}"
-       class="text-decoration-none" style="color: #FFFFFF">
+    <a href="#"
+       th:attr="data-module-url=${moduleURL},
+            data-field-name=${fieldName},
+            data-sort-dir=${pageContainer.sortField != fieldName ? pageContainer.sortDir : pageContainer.reverseSortDir}"
+       class="sort-link text-decoration-none" style="color: #FFFFFF">
         [[${columnLabel}]]
     </a>
 
@@ -180,125 +196,62 @@
 </th>
 
 <a th:fragment="page_link(moduleURL,pageNum,label)" class="page-link"
-   th:href="@{${moduleURL}+'?page='+${pageNum}+'&sortField='+${pageContainer.sortField} +'&sortDir='+${pageContainer.sortDir}+${pageContainer.keyword != null ? '&keyword='+pageContainer.keyword:''}}">[[${label}]]</a>
+   th:href="@{${moduleURL}+'?page='+${pageNum}+'&sort='+${pageContainer.sortField} +','+${pageContainer.sortDir}+${pageContainer.keyword != null ? '&keyword='+pageContainer.keyword:''}}">[[${label}]]</a>
 
 <div th:fragment="pagination(moduleURL,entityName)" th:remove="tag">
-    <div class="text-center m-3" th:if="${pageContainer.totalItems} > 0">
-        <span class="text-muted">
-            Показаны [[${entityName}]] # [[${pageContainer.startCount}]] по [[${pageContainer.endCount}]] из [[${pageContainer.totalItems}]]
-        </span>
-    </div>
+    <div class="pagination-info">
+        <div class="text-center m-3" id="pagination-text">
+            <span th:if="${pageContainer.totalItems} > 0" class="text-muted">
+                Показаны [[${entityName}]] # [[${pageContainer.startCount}]] по [[${pageContainer.endCount}]] из [[${pageContainer.totalItems}]]
+            </span>
+            <span th:unless="${pageContainer.totalItems} > 0" class="text-warning">
+                [[${entityName}]] не найдены
+            </span>
+        </div>
 
-    <div class="text-center m-3" th:unless="${pageContainer.totalItems} > 0">
-        <span class="text-warning">[[${entityName}]] не найдены</span>
-    </div>
+        <div th:if="${pageContainer.totalPages > 0}" id="pagination">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center" id="pagination-links">
+                    <!-- Первая страница -->
+                    <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="~{fragments/fragments :: page_link(${moduleURL},'1','Первая')}" class="page-link"></a>
+                    </li>
 
-    <div th:if="${pageContainer.totalPages > 0}">
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL},'1','Первая')}"
-                       class="page-link"></a>
-                </li>
+                    <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="~{fragments/fragments :: page_link(${moduleURL},${pageContainer.currentPage-1},'Предыдущая')}" class="page-link"></a>
+                    </li>
 
-                <li th:class="${pageContainer.currentPage > 1 ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL},${pageContainer.currentPage-1},'Предыдущая')}"
-                       class="page-link"></a>
-                </li>
+                    <li th:class="${pageContainer.currentPage+1 != i ? 'page-item' : 'page-item active'}" th:each="i:${#numbers.sequence(1, pageContainer.totalPages)}">
+                        <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${i-1}, ${i})}" class="page-link"></a>
+                    </li>
 
-                <li th:class="${pageContainer.currentPage+1 != i ? 'page-item' : 'page-item active'}"
-                    th:each="i:${#numbers.sequence(1, pageContainer.totalPages)}">
-                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${i-1}, ${i})}"
-                       class="page-link"></a>
-                </li>
+                    <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${pageContainer.currentPage + 1}, 'Следующая')}" class="page-link"></a>
+                    </li>
 
-                <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${pageContainer.currentPage + 1}, 'Следующая')}"
-                       class="page-link"></a>
-                </li>
-
-                <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
-                    <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${pageContainer.totalPages}, 'Последняя')}"
-                       class="page-link"></a>
-                </li>
-            </ul>
-        </nav>
+                    <li th:class="${pageContainer.currentPage + 1 < pageContainer.totalPages ? 'page-item' : 'page-item disabled'}">
+                        <a th:replace="~{fragments/fragments :: page_link(${moduleURL}, ${pageContainer.totalPages}, 'Последняя')}" class="page-link"></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
 </div>
+
 
 <!--Exception toaster-->
 <div th:fragment="exceptionToastActivator" th:remove="tag">
-    <div id="exception-message" th:if="${exceptionMessage != null}" th:data-message="${exceptionMessage}"
-         style="display:none;"></div>
-    <div th:replace="~{fragments/fragments::exceptionToast}"></div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const msgContainer = document.getElementById("exception-message");
-            if (msgContainer) {
-                const message = msgContainer.getAttribute("data-message");
-                showToast(message);
-            }
-        });
-
-        function showToast(message) {
-            const toastText = document.getElementById("toastText");
-            toastText.textContent = message;
-            const toast = new bootstrap.Toast(document.getElementById("toast"));
-            toast.show();
-        }
-    </script>
-</div>
-<div th:fragment="exceptionToast">
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-        <div id="toast" class="toast align-items-center text-white bg-danger border-0" role="alert"
-             aria-live="assertive"
-             aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <p id="toastText"></p>
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Закрыть"></button>
-            </div>
-        </div>
-    </div>
+    <div id="exception-message" th:if="${exceptionMessage != null}" th:data-message="${exceptionMessage}" style="display:none;"></div>
 </div>
 
 <!--Success toaster-->
 <div th:fragment="successToastActivator" th:remove="tag">
-    <div id="success-message" th:if="${successMessage != null}" th:data-message="${successMessage}"
-         style="display:none;"></div>
-    <div th:replace="~{fragments/fragments::successToast}"></div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const msgContainer = document.getElementById("success-message");
-            if (msgContainer) {
-                const message = msgContainer.getAttribute("data-message");
-                showSuccessToast(message);
-            }
-        });
-
-        function showSuccessToast(message) {
-            const toastText = document.getElementById("successToastText");
-            toastText.textContent = message;
-            const toast = new bootstrap.Toast(document.getElementById("successToast"));
-            toast.show();
-        }
-    </script>
+    <div id="success-message" th:if="${successMessage != null}" th:data-message="${successMessage}" style="display:none;"></div>
 </div>
-<div th:fragment="successToast">
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 9999">
-        <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert"
-             aria-live="assertive"
-             aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <p id="successToastText"></p>
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Закрыть"></button>
-            </div>
-        </div>
+
+<!--Toast container-->
+<div th:fragment="toastContainer">
+    <div class="toast-container  top-0 end-0 m-2" style=" position: absolute; z-index: 9999">
     </div>
 </div>
 
@@ -349,11 +302,16 @@
 <!--USERS PAGE FRAGMENT-->
 <div th:fragment="users">
     <script src="/js/users.js"></script>
+    <input type="hidden" id="hiddenPage" th:value="${pageContainer.currentPage}">
+    <input type="hidden" id="hiddenSortField" th:value="${pageContainer.sortField}">
+    <input type="hidden" id="hiddenSortDir" th:value="${pageContainer.sortDir}">
+    <input type="hidden" id="hiddenKeyword" th:value="${pageContainer.keyword}">
     <div class="users-container">
         <div class="action-bar">
             <div class="search-input-group">
-                <input type="text" id="searchInput" name="keyword" placeholder="Поиск" oninput="toggleClearButton()">
-                <button type="button" id="clearSearchButton" class="clear-button" onclick="clearSearch()"
+                <input type="text" id="searchInput" name="keyword" placeholder="Поиск" th:value="${pageContainer.keyword}" oninput="toggleClearButton()">
+                <button type="button" id="clearSearchButton" class="clear-button" th:attr="data-sort=${pageContainer.sortField}, data-sort-direction=${pageContainer.sortDir}"
+                        onclick="clearSearchUsers(this)"
                         style="display: none;">
                     ✕
                 </button>
@@ -535,13 +493,23 @@
     </div>
 </div>
 
+<!--LOGS PAGE FRAGMENT-->
 <div th:fragment="logs">
     <script src="/js/logs.js"></script>
     <div class="logs-container">
+        <input type="hidden" id="hiddenPage" th:value="${pageContainer.currentPage}">
+        <input type="hidden" id="hiddenSortField" th:value="${pageContainer.sortField}">
+        <input type="hidden" id="hiddenSortDir" th:value="${pageContainer.sortDir}">
+        <input type="hidden" id="hiddenKeyword" th:value="${pageContainer.keyword}">
+
         <div class="action-bar">
             <div class="search-input-group">
-                <input type="text" id="searchInput" name="keyword" placeholder="Поиск" oninput="toggleClearButton()">
-                <button type="button" id="clearSearchButton" class="clear-button" onclick="clearSearch()"
+                <input type="text" id="searchInput" name="keyword"
+                       placeholder="Поиск"
+                       oninput="toggleClearButton()"
+                       th:value="${pageContainer.keyword}">
+                <button type="button" id="clearSearchButton" class="clear-button" th:attr="data-sort=${pageContainer.sortField}, data-sort-direction=${pageContainer.sortDir}"
+                        onclick="clearSearchLogs(this)"
                         style="display: none;">
                     ✕
                 </button>

@@ -30,14 +30,6 @@
                 </li>
                 <li>
                     <button class="menu-button"
-                            th:classappend="${fragment.equals('notification')} ? ' active'"
-                            onclick="document.location='/notifications'">
-                        <img class="button-icon" src="/images/Notification.png" alt="Notification Image">
-                        <span>Уведомления</span>
-                    </button>
-                </li>
-                <li>
-                    <button class="menu-button"
                             th:classappend="${fragment.equals('history')} ? ' active'"
                             onclick="document.location='/history'">
                         <img class="button-icon" src="/images/Recent.png" alt="Recent Image">
@@ -94,8 +86,42 @@
         </div>
     </div>
 </div>
-<div th:insert="~{fragments/fragments::exceptionToastActivator}"></div>
-<div th:insert="~{fragments/fragments::successToastActivator}"></div>
+<script>
+    // introJs().setOptions({
+    //     steps: [
+    //         {
+    //             title: "Рады приветствовать!",
+    //             intro: "Хотелось бы предложить вам небольшое приветственное обучение ;) \n" +
+    //                 "Вы всегда можете его заново пройти при нажатии на кнопку 'Помощь'"
+    //
+    //         },
+    //         // {
+    //         //     element: document.querySelector('.menu-container'),
+    //         //     title: "Панель навигации",
+    //         //     intro: "При нажатии на кнопки вы попадете в соответсвующий раздел"
+    //         // },
+    //         // {
+    //         //     element: document.querySelector('.header-button'),
+    //         //     title: "Изменить пароль",
+    //         //     intro: "При нажатии на кнопку вы всегда сможете изменить свой пароль."
+    //         // },
+    //         // {
+    //         //     element: document.querySelector('.gestures'),
+    //         //     title: "Жесты",
+    //         //     intro: "В этом блоке находятся кнопки жестов, при нажатии на которые вы можете их выполнять."
+    //         // },
+    //         // {
+    //         //     element: document.querySelector('.event-table'),
+    //         //     title: "Последние действия",
+    //         //     intro: "Здесь отображаются последние 5 жестов / сценариев, которые вы запускали."
+    //         // },
+    //     ],
+    //     disableInteraction: true
+    // }).oncomplete(() => {
+    // }).start();
+
+</script>
 <div th:insert="~{fragments/fragments::changePasswordModal}"></div>
+<div th:insert="~{fragments/fragments::toastContainer}"></div>
 </body>
 </html>

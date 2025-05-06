@@ -14,6 +14,7 @@
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
+<script src="/js/utils.js"></script>
 <form th:action="@{/registration}" method="post" id="registrationForm" th:object="${userDto}">
     <div class="page-container">
         <div class="content">
@@ -35,16 +36,16 @@
                         <input type="password" id="password-input" required th:field="*{password}" minlength="8"
                                maxlength="30"
                                placeholder="Введите пароль"/>
-                        <button type="button" class="toggle-password" onclick="togglePassword()">
-                            <span id="password-button-text">Показать</span>
+                        <button type="button" class="toggle-password" onclick="togglePassword('password-input')">
+                            <span id="show-button-text-password-input">Показать</span>
                         </button>
                     </div>
                     <div class="input-wrapper">
                         <span class="icon"><img src="/images/password-icon.svg" alt="Password Icon"/></span>
                         <input type="password" required id="repeat-password-input" minlength="8" maxlength="30"
                                placeholder="Повторите пароль"/>
-                        <button type="button" class="toggle-password" onclick="toggleRepeatPassword()">
-                            <span id="repeat-button-text">Показать</span>
+                        <button type="button" class="toggle-password" onclick="togglePassword('repeat-password-input')">
+                            <span id="show-button-text-repeat-password-input">Показать</span>
                         </button>
                     </div>
                     <button type="button" id="submit-form-button" class="login-button">ЗАРЕГИСТРИРОВАТЬСЯ</button>
@@ -56,6 +57,7 @@
         </div>
     </div>
 </form>
+<div th:insert="~{fragments/fragments::toastContainer}"></div>
 <div th:replace="~{fragments/fragments::exceptionToastActivator}"></div>
 <script>
     document.getElementById("submit-form-button").addEventListener("click", function (e) {
@@ -64,36 +66,17 @@
         const repeatPassword = document.getElementById("repeat-password-input");
 
         if (!username.value.trim() || !password.value.trim() || !repeatPassword.value.trim()) {
-            showToast("Пожалуйста, заполните все поля.");
+            showExceptionToast("Пожалуйста, заполните все поля.");
             return;
         }
 
         if (password.value !== repeatPassword.value) {
-            showToast("Пароли не совпадают.");
+            showExceptionToast("Пароли не совпадают.");
             return;
         }
 
         document.getElementById("registrationForm").submit();
     });
-
-    function toggleRepeatPassword() {
-        const repeatPasswordInput = document.getElementById("repeat-password-input");
-        const repeatPasswordBtnText = document.getElementById("repeat-button-text");
-        const isRepeatPassword = repeatPasswordInput.type === "password";
-
-        repeatPasswordInput.type = isRepeatPassword ? "text" : "password";
-        repeatPasswordBtnText.textContent = isRepeatPassword ? "Скрыть" : "Показать";
-    }
-
-    function togglePassword() {
-        const passwordInput = document.getElementById("password-input");
-        const passwordBtnText = document.getElementById("password-button-text");
-        const isPassword = passwordInput.type === "password";
-
-        passwordInput.type = isPassword ? "text" : "password";
-        passwordBtnText.textContent = isPassword ? "Скрыть" : "Показать";
-
-    }
     </script>
 </body>
 </html>
