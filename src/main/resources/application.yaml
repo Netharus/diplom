@@ -5,9 +5,9 @@ spring:
     import: optional:file:./util/.env[.properties]
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/diplom}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -17,14 +17,14 @@ spring:
       client:
         config:
           arduinoClient:
-            url: ${ARDUINO_URL}
+            url: ${ARDUINO_URL:http://192.168.0.131}
             error-decoder: com.netharus.exceptions.decoder.CustomErrorDecoder
   web:
     resources:
       add-mappings: true
 
 server:
-  port: ${SERVER_PORT}
+  port: ${SERVER_PORT:8080}
 logging:
   level:
     org.springframework.web: DEBUG

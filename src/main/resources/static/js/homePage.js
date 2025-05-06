@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             fetch('/gestures', {
                 method: 'POST',
-                body: new URLSearchParams({ gestureId }),
+                body: new URLSearchParams({gestureId}),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -93,4 +93,82 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
+    fetch('/account/isUserViewTutor', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка запроса');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data === false) {
+                startIntro();
+                guideViewed();
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке показа обучающего тура:', error);
+        });
 });
+
+
+function startIntro() {
+    introJs().setOptions({
+        steps: [
+            {
+                title: "Добро пожаловать!",
+                intro: "Пройдите короткий тур по основным функциям.<br>" +
+                    "Позже вы всегда можете вернуться к нему через кнопку <b>«Помощь»</b> в меню. Для каждой страницы предусмотрена своя подсказка."
+            },
+            {
+                element: document.querySelector('.menu-container'),
+                title: "Навигация",
+                intro: "Используйте кнопки на панели, чтобы перейти в нужный раздел."
+            },
+            {
+                element: document.querySelector('.header-button'),
+                title: "Смена пароля",
+                intro: "Здесь вы можете при необходимости изменить свой пароль."
+            },
+            {
+                element: document.querySelector('.gestures'),
+                title: "Быстрые жесты",
+                intro: "Нажмите на нужную кнопку, чтобы выполнить жест или действие."
+            },
+            {
+                element: document.querySelector('.event-table'),
+                title: "История действий",
+                intro: "Здесь отображаются последние 5 использованных жестов или сценариев."
+            },
+            {
+                title: "Готово!",
+                intro: "Вы успешно прошли вводный тур. Приятной работы!"
+            },
+        ],
+        disableInteraction: true
+    }).start();
+}
+
+function guideViewed() {
+    fetch('/account/guideViewed', {
+        method: 'PATCH',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Не удалось отметить обучение как пройденное');
+            }
+            console.log('Обучающий тур отмечен как пройденный');
+        })
+        .catch(error => {
+            console.error('Ошибка при отметке обучения:', error);
+        });
+}

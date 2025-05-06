@@ -152,7 +152,7 @@
 <div th:fragment="history">
     <div class="history-container">
         <table class="table  table-bordered table-hover table-responsive-xl">
-            <thead class="" style="background-color: var(--regular-color)">
+            <thead class="history-table-header" style="background-color: var(--regular-color)">
             <tr>
                 <th th:replace="~{fragments/fragments::column_link('/history','dateTime','Дата и время')}"/>
                 <th th:replace="~{fragments/fragments::column_link('/history','gesture','Жест')}"/>
@@ -177,6 +177,23 @@
                 sort(moduleURL, fieldName, sortDir);
             });
         });
+        function startIntro() {
+            introJs().setOptions({
+                steps: [
+                    {
+                        element: document.querySelector('.table'),
+                        title: "История",
+                        intro: "Здесь отображаются все жесты и сценарии, которые вы выполняли ранее."
+                    },
+                    {
+                        element: document.querySelector('.history-table-header'),
+                        title: "Сортировка",
+                        intro: "Нажимая на заголовки столбцов, вы можете отсортировать записи по соответствующему параметру."
+                    },
+                ],
+                disableInteraction: true
+            }).start();
+        }
     </script>
 </div>
 
@@ -237,7 +254,6 @@
         </div>
     </div>
 </div>
-
 
 <!--Exception toaster-->
 <div th:fragment="exceptionToastActivator" th:remove="tag">
@@ -327,7 +343,7 @@
         </div>
         <div>
             <table class="table table-borderless table-hover table-responsive-xl" style="border-top: none;">
-                <thead class="" style="background-color: var(--regular-color); border-top: none;">
+                <thead class="users-table-header" style="background-color: var(--regular-color); border-top: none;">
                 <tr>
                     <th th:replace="~{fragments/fragments::column_link('/admin/users','id','ID')}"/>
                     <th th:replace="~{fragments/fragments::column_link('/admin/users','username','Имя пользователя')}"/>
@@ -345,7 +361,7 @@
                                 role="button"
                                 style="cursor: pointer;"
                                 th:data-user-id="${userResponseDto.id}"
-                                th:class="${userResponseDto.active} ? 'badge bg-success active-badge' : 'badge bg-warning text-dark active-badge'"
+                                th:class="${userResponseDto.active} ? 'status-button badge bg-success active-badge' : 'status-button badge bg-warning text-dark active-badge'"
                                 th:text="${userResponseDto.active} ? 'Активен' : 'Не активен'"
                                 onclick="changeUserStatus(this)">
                         </span>
@@ -520,7 +536,7 @@
         </div>
         <div>
             <table class="table table-borderless table-hover table-responsive-xl" style="border-top: none;">
-                <thead class="" style="background-color: var(--regular-color); border-top: none;">
+                <thead class="logs-table-header" style="background-color: var(--regular-color); border-top: none;">
                 <tr>
                     <th th:replace="~{fragments/fragments::column_link('/admin/logs','id','ID')}"/>
                     <th th:replace="~{fragments/fragments::column_link('/admin/logs','dateTime','Дата и время')}"/>
@@ -540,7 +556,7 @@
                     </td>
                     <td>
                         <button
-                                class="btn btn-outline-primary"
+                                class="log-info-button btn btn-outline-primary"
                                 data-bs-toggle="modal"
                                 data-bs-target="#logInfoModal"
                                 th:data-user-id="${logResponseDto.userId}"
