@@ -127,6 +127,9 @@ function startIntro() {
                 intro: "Нажмите на кнопку, чтобы просмотреть подробную информацию по конкретному логу."
             },
         ],
-        disableInteraction: true
+        disableInteraction: true,
+        nextLabel: 'Далее',
+        prevLabel: 'Назад',
+        doneLabel: 'Готово'
     }).start();
 }

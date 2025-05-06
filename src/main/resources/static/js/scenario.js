@@ -233,6 +233,9 @@ function startIntro() {
                 intro: "Сценарий может содержать не более 5 жестов одновременно."
             },
         ],
-        disableInteraction: true
+        disableInteraction: true,
+        nextLabel: 'Далее',
+        prevLabel: 'Назад',
+        doneLabel: 'Готово'
     }).start();
 }

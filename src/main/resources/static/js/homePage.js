@@ -151,7 +151,10 @@ function startIntro() {
                 intro: "Вы успешно прошли вводный тур. Приятной работы!"
             },
         ],
-        disableInteraction: true
+        disableInteraction: true,
+        nextLabel: 'Далее',
+        prevLabel: 'Назад',
+        doneLabel: 'Готово'
     }).start();
 }
 

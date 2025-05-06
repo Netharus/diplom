@@ -282,6 +282,9 @@ function startIntro() {
                 intro: "Нажмите на кнопку, чтобы изменить статус пользователя: активный ↔ неактивный."
             },
         ],
-        disableInteraction: true
+        disableInteraction: true,
+        nextLabel: 'Далее',
+        prevLabel: 'Назад',
+        doneLabel: 'Готово'
     }).start();
 }
