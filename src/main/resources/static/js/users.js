@@ -91,7 +91,7 @@ function updateUsersTable(users) {
             <td>${user.id}</td>
             <td>${user.username}</td>
             <td>
-                <span role="button" style="cursor: pointer;" data-user-id="${user.id}" class="badge ${activeBadgeClass} active-badge" onclick="changeUserStatus(this)">
+                <span role="button" style="cursor: pointer;" data-user-id="${user.id}" class="status-button badge ${activeBadgeClass} active-badge" onclick="changeUserStatus(this)">
                     ${activeText}
                 </span>
             </td>
@@ -267,4 +267,21 @@ function submitUserUpdate() {
             showExceptionToast(MSG_UPDATE_USER_ERROR);
         }
     });
+}
+function startIntro() {
+    introJs().setOptions({
+        steps: [
+            {
+                element: document.querySelector('.users-table-header'),
+                title: "Сортировка",
+                intro: "Нажимая на заголовки столбцов, вы можете сортировать пользователей по выбранному параметру."
+            },
+            {
+                element: document.querySelector('.status-button'),
+                title: "Статус",
+                intro: "Нажмите на кнопку, чтобы изменить статус пользователя: активный ↔ неактивный."
+            },
+        ],
+        disableInteraction: true
+    }).start();
 }

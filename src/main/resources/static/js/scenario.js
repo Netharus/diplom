@@ -215,3 +215,24 @@ document.addEventListener('DOMContentLoaded', () => {
         fileInput.click();
     });
 });
+function startIntro() {
+    introJs().setOptions({
+        steps: [
+            {
+                element: document.querySelector('.gestures'),
+                title: "Жесты",
+                intro: "Нажмите на нужный жест, чтобы добавить его в сценарий."
+            },
+            {
+                element: document.querySelector('.scenario-gesture-button-box'),
+                title: "Сценарий",
+                intro: "Здесь отображаются добавленные жесты. Нажмите на иконку жеста, чтобы удалить его из сценария."
+            },
+            {
+                title: "Ограничения",
+                intro: "Сценарий может содержать не более 5 жестов одновременно."
+            },
+        ],
+        disableInteraction: true
+    }).start();
+}

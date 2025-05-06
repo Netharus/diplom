@@ -59,7 +59,7 @@ function updateLogsTable(logs) {
                 <span class="badge ${statusClass} active-badge">${log.status}</span>
             </td>
             <td>
-                <button class="btn btn-outline-primary"
+                <button class="log-info-button btn btn-outline-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#logInfoModal"
                         data-user-id="${log.userId}"
@@ -113,3 +113,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+function startIntro() {
+    introJs().setOptions({
+        steps: [
+            {
+                element: document.querySelector('.logs-table-header'),
+                title: "Сортировка",
+                intro: "Нажимая на заголовки столбцов, вы можете сортировать записи по нужному параметру."
+            },
+            {
+                element: document.querySelector('.log-info-button'),
+                title: "Детали",
+                intro: "Нажмите на кнопку, чтобы просмотреть подробную информацию по конкретному логу."
+            },
+        ],
+        disableInteraction: true
+    }).start();
+}
