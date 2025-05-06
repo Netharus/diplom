@@ -61,7 +61,7 @@
     </script>
 </div>
 
-<script th:if="${message}">
+<script th:if="${message}" th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
         showSuccessToast([[${message}]]);
     });

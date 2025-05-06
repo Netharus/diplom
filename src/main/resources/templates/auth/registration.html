@@ -61,12 +61,12 @@
 <div th:replace="~{fragments/fragments::exceptionToastActivator}"></div>
 <script>
     document.getElementById("submit-form-button").addEventListener("click", function (e) {
-        const username = document.getElementById("username-input");
         const password = document.getElementById("password-input");
         const repeatPassword = document.getElementById("repeat-password-input");
+        const form = document.getElementById("registrationForm");
 
-        if (!username.value.trim() || !password.value.trim() || !repeatPassword.value.trim()) {
-            showExceptionToast("Пожалуйста, заполните все поля.");
+        if (!form.checkValidity()) {
+            form.reportValidity();
             return;
         }
 
@@ -75,7 +75,7 @@
             return;
         }
 
-        document.getElementById("registrationForm").submit();
+        form.submit();
     });
     </script>
 </body>
