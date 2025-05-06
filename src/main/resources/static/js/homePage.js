@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // 💬 Константы сообщений
+    const MSG_CONFIRM_GESTURE_PREFIX = "Подтвердите жест ";
+    const MSG_UNKNOWN_ERROR = "Произошла неизвестная ошибка.";
+    const MSG_EVENTS_EMPTY = "Список событий пуст";
+
     const gestureModal = document.getElementById('gestureModal');
     const gestureForm = document.getElementById('gestureForm');
 
@@ -10,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const gestureName = button.getAttribute('data-name');
 
             document.getElementById('gestureIdInput').value = gestureId;
-            document.getElementById('gestureNameLabel').textContent = "Подтвердите жест " + gestureTitle;
+            document.getElementById('gestureNameLabel').textContent = MSG_CONFIRM_GESTURE_PREFIX + gestureTitle;
 
             const gifPath = `/images/${gestureName}.gif`;
             document.getElementById('gesturePreview').src = gifPath;
@@ -20,14 +25,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (gestureForm) {
         gestureForm.addEventListener('submit', function (event) {
-            event.preventDefault(); // отменяем стандартную отправку формы
+            event.preventDefault();
 
             const formData = new FormData(gestureForm);
             const gestureId = formData.get('gestureId');
 
             fetch('/gestures', {
                 method: 'POST',
-                body: new URLSearchParams({ gestureId }),
+                body: new URLSearchParams({gestureId}),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -41,27 +46,19 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.text();
                 })
                 .then(result => {
-                    // Успех
-                    document.getElementById('successToastText').textContent = result;
-                    const successToast = new bootstrap.Toast(document.getElementById('successToast'));
-                    successToast.show();
+                    showSuccessToast(result);
 
                     const gestureModalInstance = bootstrap.Modal.getInstance(gestureModal);
                     if (gestureModalInstance) {
-                        gestureModalInstance.hide(); // закрыть модалку
+                        gestureModalInstance.hide();
                     }
                 })
                 .catch(error => {
-                    // Ошибка - обработка ErrorResponseDto
                     if (error.message) {
-                        // Выводим сообщение из поля message
-                        document.getElementById('toastText').textContent = error.message;
+                        showExceptionToast(error.message);
                     } else {
-                        // Если сообщение не найдено, выводим стандартную ошибку
-                        document.getElementById('toastText').textContent = 'Произошла неизвестная ошибка.';
+                        showExceptionToast(MSG_UNKNOWN_ERROR);
                     }
-                    const errorToast = new bootstrap.Toast(document.getElementById('toast'));
-                    errorToast.show();
                 });
         });
     }
@@ -83,17 +80,95 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (events.length === 0) {
             const row = document.createElement('tr');
-            row.innerHTML = '<td colspan="2" style="text-align: center;">Список событий пуст</td>';
+            row.innerHTML = `<td colspan="2" style="text-align: center;">${MSG_EVENTS_EMPTY}</td>`;
             tbody.appendChild(row);
         } else {
             events.forEach(event => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                        <td>${event.dateTime}</td>
-                        <td>${event.gesture}</td>
-                    `;
+                    <td>${event.dateTime}</td>
+                    <td>${event.gesture}</td>
+                `;
                 tbody.appendChild(row);
             });
         }
     }
+
+    fetch('/account/isUserViewTutor', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка запроса');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data === false) {
+                startIntro();
+                guideViewed();
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при проверке показа обучающего тура:', error);
+        });
 });
+
+
+function startIntro() {
+    introJs().setOptions({
+        steps: [
+            {
+                title: "Добро пожаловать!",
+                intro: "Пройдите короткий тур по основным функциям.<br>" +
+                    "Позже вы всегда можете вернуться к нему через кнопку <b>«Помощь»</b> в меню. Для каждой страницы предусмотрена своя подсказка."
+            },
+            {
+                element: document.querySelector('.menu-container'),
+                title: "Навигация",
+                intro: "Используйте кнопки на панели, чтобы перейти в нужный раздел."
+            },
+            {
+                element: document.querySelector('.header-button'),
+                title: "Смена пароля",
+                intro: "Здесь вы можете при необходимости изменить свой пароль."
+            },
+            {
+                element: document.querySelector('.gestures'),
+                title: "Быстрые жесты",
+                intro: "Нажмите на нужную кнопку, чтобы выполнить жест или действие."
+            },
+            {
+                element: document.querySelector('.event-table'),
+                title: "История действий",
+                intro: "Здесь отображаются последние 5 использованных жестов или сценариев."
+            },
+            {
+                title: "Готово!",
+                intro: "Вы успешно прошли вводный тур. Приятной работы!"
+            },
+        ],
+        disableInteraction: true
+    }).start();
+}
+
+function guideViewed() {
+    fetch('/account/guideViewed', {
+        method: 'PATCH',
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Не удалось отметить обучение как пройденное');
+            }
+            console.log('Обучающий тур отмечен как пройденный');
+        })
+        .catch(error => {
+            console.error('Ошибка при отметке обучения:', error);
+        });
+}

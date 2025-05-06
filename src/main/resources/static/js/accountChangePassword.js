@@ -1,16 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // 💬 Константы сообщений
+    const MSG_PASSWORDS_DO_NOT_MATCH = "Новый пароль и подтверждение пароля не совпадают.";
+    const MSG_PASSWORDS_EQUAL = "Новый пароль не может быть таким же, как старый.";
+    const MSG_INVALID_OLD_PASSWORD = "Неверный старый пароль!";
+    const MSG_PASSWORD_UPDATED = "Пароль успешно обновлен!";
+    const MSG_UPDATE_ERROR = "Произошла ошибка при обновлении пароля.";
+
     document.getElementById("savePasswordBtn").addEventListener("click", function () {
         const currentPassword = document.getElementById("currentPassword").value;
         const newPassword = document.getElementById("newPassword").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
+        const form = document.getElementById("passwordChangeForm");
+
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
 
         if (newPassword !== confirmPassword) {
-            showToast("Новый пароль и подтверждение пароля не совпадают.");
+            showExceptionToast(MSG_PASSWORDS_DO_NOT_MATCH);
             return;
         }
 
         if (currentPassword === newPassword) {
-            showToast("Новый пароль не может быть таким же, как старый.");
+            showExceptionToast(MSG_PASSWORDS_EQUAL);
             return;
         }
 
@@ -22,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (isValid) {
                     updatePassword(newPassword);
                 } else {
-                    showToast("Неверный старый пароль!");
+                    showExceptionToast(MSG_INVALID_OLD_PASSWORD);
                 }
             }
         };
@@ -36,47 +49,17 @@ document.addEventListener("DOMContentLoaded", function () {
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    showSuccessToast("Пароль успешно обновлен!");
-                    closeModal(); // Закрытие модального окна
+                    showSuccessToast(MSG_PASSWORD_UPDATED);
+                    closeModal();
                 } else {
-                    showErrorToast("Произошла ошибка при обновлении пароля.");
+                    showExceptionToast(MSG_UPDATE_ERROR);
                 }
             }
         };
         xhr.send(`password=${encodeURIComponent(newPassword)}`);
     }
 
-    function showToast(message) {
-        const toastText = document.getElementById('toastText');
-        toastText.textContent = message;
-        const toast = new bootstrap.Toast(document.getElementById('toast'));
-        toast.show();
-    }
-
-    function showSuccessToast(message) {
-        const successToastText = document.getElementById('successToastText');
-        successToastText.textContent = message;
-        const successToast = new bootstrap.Toast(document.getElementById('successToast'));
-        successToast.show();
-    }
-
-    function showErrorToast(message) {
-        const errorToastText = document.getElementById('errorToastText');
-        errorToastText.textContent = message;
-        const errorToast = new bootstrap.Toast(document.getElementById('errorToast'));
-        errorToast.show();
-    }
-
-    // Функция для закрытия модального окна
     function closeModal() {
-        $('#changePasswordModal').modal('hide');// Закрываем модальное окно
+        $('#changePasswordModal').modal('hide');
     }
 });
-function togglePassword(fieldId) {
-    const input = document.getElementById(fieldId);
-    const icon = document.getElementById('show-button-text-' + fieldId);
-
-    const isPassword = input.type === "password";
-    input.type = isPassword ? "text" : "password";
-    icon.textContent = isPassword ? "Скрыть" : "Показать";
-}

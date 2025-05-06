@@ -7,6 +7,7 @@ import com.netharus.domain.dto.request.UserDto;
 import com.netharus.domain.dto.response.PageContainer;
 import com.netharus.domain.dto.response.UserResponseDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
     User findByUsername(String username);
@@ -30,4 +31,6 @@ public interface UserService {
     void deleteUser(Long userId);
 
     void updateUser(AdminUserUpdateDto adminUserUpdateDto);
+
+    void guideViewed(UserDetails userDetails);
 }

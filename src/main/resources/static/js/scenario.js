@@ -1,22 +1,21 @@
+// ✅ Глобальные константы сообщений
+const MSG_LIMIT = "Нельзя добавить больше 5 жестов в сценарий.";
+const MSG_EMPTY_SCENARIO = "Нельзя запустить пустой сценарий!";
+const MSG_EMPTY_EXPORT = "Нельзя экспортировать пустой сценарий!";
+const MSG_SCENARIO_RUN_ERROR = "Ошибка при выполнении сценария.";
+const MSG_EXPORT_ERROR = "Не удалось экспортировать сценарий. Попробуйте позже.";
+const MSG_IMPORT_ERROR = "Ошибка при загрузке сценария.";
+const MSG_TOOLTIP_REMOVE = "Удалить жест?";
+
 document.addEventListener('DOMContentLoaded', () => {
     const gestureButtons = document.querySelectorAll('.gesture-button');
     const scenarioBoxes = document.querySelectorAll('.gesture-scenario-box');
-    const toast = new bootstrap.Toast(document.getElementById('toast'));
-    const toastText = document.getElementById('toastText');
-    const successToast = new bootstrap.Toast(document.getElementById('successToast'));
-    const successToastText = document.getElementById('successToastText');
     const exportButton = document.getElementById('exportButton');
     const importButton = document.getElementById('importButton');
     const inputButton = document.getElementById('inputButton');
     const scenarioInput = document.getElementById('scenarioInput');
     const scenarioForm = document.getElementById('scenarioForm');
     const gestureMap = new Map();
-
-    const LIMIT_MESSAGE = "Нельзя добавить больше 5 жестов в сценарий.";
-    const EMPTY_MESSAGE = "Нельзя запустить пустой сценарий!";
-    const EMPTY_EXPORT_MESSAGE = "Нельзя экспортировать пустой сценарий!";
-    const LOAD_EXCEPTION_MESSAGE = "Ошибка при загрузке сценария";
-    const EXPORT_EXCEPTION_MESSAGE = 'Не удалось экспортировать сценарий. Попробуйте позже.';
 
     const updateBox = (box, src, alt) => {
         const clonedImg = document.createElement('img');
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         box.appendChild(clonedImg);
 
         box.setAttribute('data-bs-toggle', 'tooltip');
-        box.setAttribute('data-bs-title', 'Удалить жест?');
+        box.setAttribute('data-bs-title', MSG_TOOLTIP_REMOVE);
         new bootstrap.Tooltip(box);
     };
 
@@ -36,8 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             const usedBoxes = Array.from(scenarioBoxes).filter(box => box.children.length > 0);
             if (usedBoxes.length >= 5) {
-                toastText.textContent = LIMIT_MESSAGE;
-                toast.show();
+                showExceptionToast(MSG_LIMIT);
                 return;
             }
 
@@ -77,8 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .trim();
 
         if (scenarioValue === "") {
-            toastText.textContent = EMPTY_MESSAGE;
-            toast.show();
+            showExceptionToast(MSG_EMPTY_SCENARIO);
             e.preventDefault();
             return;
         }
@@ -96,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .trim();
 
         if (scenarioValue === "") {
-            toastText.textContent = EMPTY_MESSAGE;
-            toast.show();
+            showExceptionToast(MSG_EMPTY_SCENARIO);
             return;
         }
 
@@ -112,17 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                toastText.textContent = errorText || "Ошибка при выполнении сценария.";
-                toast.show();
+                showExceptionToast(errorText || MSG_SCENARIO_RUN_ERROR);
                 return;
             }
 
             const successMessage = await response.text();
-            successToastText.textContent = successMessage;
-            successToast.show();
+            showSuccessToast(successMessage);
         } catch (error) {
-            toastText.textContent = "Ошибка при выполнении сценария.";
-            toast.show();
+            showExceptionToast(MSG_SCENARIO_RUN_ERROR);
             console.error('Ошибка отправки сценария:', error);
         }
     });
@@ -135,8 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .trim();
 
         if (!scenarioValue) {
-            toastText.textContent = EMPTY_EXPORT_MESSAGE;
-            toast.show();
+            showExceptionToast(MSG_EMPTY_EXPORT);
             return;
         }
 
@@ -145,8 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const errorResponse = await response.json();
-                toastText.textContent = errorResponse.message || EXPORT_EXCEPTION_MESSAGE;
-                toast.show();
+                showExceptionToast(errorResponse.message || MSG_EXPORT_ERROR);
                 return;
             }
 
@@ -162,8 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.URL.revokeObjectURL(url);
 
         } catch (error) {
-            toastText.textContent = EXPORT_EXCEPTION_MESSAGE;
-            toast.show();
+            showExceptionToast(MSG_EXPORT_ERROR);
             console.error('Ошибка при экспорте сценария:', error);
         }
     });
@@ -185,8 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (!response.ok) {
                     const errorResponse = await response.json();
-                    toastText.textContent = errorResponse.message || LOAD_EXCEPTION_MESSAGE;
-                    toast.show();
+                    showExceptionToast(errorResponse.message || MSG_IMPORT_ERROR);
                     return;
                 }
 
@@ -219,11 +208,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 scenarioInput.value = scenarioArray.join(' ');
 
             } catch (error) {
-                toastText.textContent = LOAD_EXCEPTION_MESSAGE;
-                toast.show();
+                showExceptionToast(MSG_IMPORT_ERROR);
                 console.error('Ошибка при импорте сценария:', error);
             }
         };
         fileInput.click();
     });
 });
+function startIntro() {
+    introJs().setOptions({
+        steps: [
+            {
+                element: document.querySelector('.gestures'),
+                title: "Жесты",
+                intro: "Нажмите на нужный жест, чтобы добавить его в сценарий."
+            },
+            {
+                element: document.querySelector('.scenario-gesture-button-box'),
+                title: "Сценарий",
+                intro: "Здесь отображаются добавленные жесты. Нажмите на иконку жеста, чтобы удалить его из сценария."
+            },
+            {
+                title: "Ограничения",
+                intro: "Сценарий может содержать не более 5 жестов одновременно."
+            },
+        ],
+        disableInteraction: true
+    }).start();
+}

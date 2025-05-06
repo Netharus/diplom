@@ -55,4 +55,9 @@ public class User {
     @Builder.Default
     @Column(nullable = false, name = "active")
     private boolean active = false;
+
+    @Builder.Default
+    @Column(nullable = false, name = "guide_viewed")
+    private boolean guideViewed = false;
+
 }
