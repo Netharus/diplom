@@ -77,6 +77,17 @@
 
         form.submit();
     });
-    </script>
+    document.querySelectorAll("input[type='password']").forEach(elem => {
+        elem.addEventListener("copy", event => {
+            event.preventDefault();
+        });
+        elem.addEventListener("paste", event => {
+            event.preventDefault();
+        });
+        elem.addEventListener("drop", event => {
+            event.preventDefault();
+        });
+    });
+</script>
 </body>
 </html>

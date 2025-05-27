@@ -1,5 +1,4 @@
-// ✅ Глобальные константы сообщений
-const MSG_LIMIT = "Нельзя добавить больше 5 жестов в сценарий.";
+const MSG_LIMIT = "Нельзя добавть больше 5 жестов в сценарий.";
 const MSG_EMPTY_SCENARIO = "Нельзя запустить пустой сценарий!";
 const MSG_EMPTY_EXPORT = "Нельзя экспортировать пустой сценарий!";
 const MSG_SCENARIO_RUN_ERROR = "Ошибка при выполнении сценария.";
@@ -107,15 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                showExceptionToast(errorText || MSG_SCENARIO_RUN_ERROR);
-                return;
+                const errorData = await response.json().catch(() => null);
+                const errorMessage = errorData?.message || MSG_SCENARIO_RUN_ERROR;
+                throw new Error(errorMessage);
             }
 
             const successMessage = await response.text();
             showSuccessToast(successMessage);
         } catch (error) {
-            showExceptionToast(MSG_SCENARIO_RUN_ERROR);
+            if (error.message) {
+                showExceptionToast(error.message);
+            } else {
+                showExceptionToast(MSG_SCENARIO_RUN_ERROR);
+            }
             console.error('Ошибка отправки сценария:', error);
         }
     });

@@ -12,7 +12,7 @@ public final class ErrorMessages {
     public static final String USERNAME_NOT_FOUND = "Пользователь с таким логином не найден";
     public static final String BAD_CREDENTIALS = "Неверный логин или пароль";
     public static final String ILLEGAL_GESTURE_ID = "Неверный id жеста. Жест с id: %d не существует";
-    public static final String INTERRUPTED_GESTURE_EXCEPTION = "Одновременно может быть запущен один жест или один сценарий.Дождитесь окончания сценария";
+    public static final String INTERRUPTED_GESTURE_EXCEPTION = "Одновременно может быть запущен один жест или один сценарий. Дождитесь окончания сценария";
     public static final String UNEXPECTED_ERROR = "Произошла неожиданная ошибка";
     public static final String PARSE_ERROR = "Ошибка парсинга JSON. Неверный формат данных.";
 

@@ -140,6 +140,7 @@ body {
     background-color: #FFFFFF;
     display: flex;
     height: 8%;
+    padding-right: 24px;
 }
 
 .main-content .content {
