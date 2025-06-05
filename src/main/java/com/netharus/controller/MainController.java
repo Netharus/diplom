@@ -1,5 +1,6 @@
 package com.netharus.controller;
 
+import com.netharus.controller.utilityForControllers.PageBuilder;
 import com.netharus.domain.enums.Gestures;
 import com.netharus.service.EventService;
 import com.netharus.service.UserService;
@@ -21,6 +22,7 @@ public class MainController {
 
     private final EventService eventService;
     private final UserService userService;
+    private final PageBuilder pageBuilder;
 
     @GetMapping("/")
     public String redirectToHomePage() {
@@ -29,19 +31,15 @@ public class MainController {
 
     @GetMapping("/home")
     public ModelAndView home(@AuthenticationPrincipal UserDetails user) {
-        ModelAndView mav = new ModelAndView("homePage");
-        mav.addAllObjects(Map.of("username", user.getUsername(),
-                        "pageTitle", PageTitles.HOME_PAGE.getPageTitle(),
-                        "fragment", PageTitles.HOME_PAGE.getFragment()
-                )
-        );
-        mav.addObject("gestures", Gestures.getAll());
-        mav.addObject("events", eventService
-                .getLastFiveEvents(userService
-                        .findByUsername(user
-                                .getUsername())
-                        .getId()));
-        return mav;
+        Long userId = userService.findByUsername(user.getUsername()).getId();
+
+        return pageBuilder.builder()
+                .username(user.getUsername())
+                .pageTitle(PageTitles.HOME_PAGE.getPageTitle())
+                .fragment(PageTitles.HOME_PAGE.getFragment())
+                .gestures(Gestures.getAll())
+                .events(eventService.getLastFiveEvents(userId))
+                .build();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.netharus.controller;
 
+import com.netharus.controller.utilityForControllers.PageBuilder;
 import com.netharus.domain.enums.Gestures;
 import com.netharus.stringConstants.PageTitles;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +18,16 @@ import java.util.Map;
 @Slf4j
 public class ScenarioController {
 
+    private final PageBuilder pageBuilder;
+
     @GetMapping("/scenario")
     public ModelAndView scenario(@AuthenticationPrincipal UserDetails user) {
-        ModelAndView mav = new ModelAndView("homePage");
-        mav.addAllObjects(Map.of("username", user.getUsername(),
-                        "pageTitle", PageTitles.SCENARIO_PAGE.getPageTitle(),
-                        "fragment", PageTitles.SCENARIO_PAGE.getFragment()
-                )
-        );
-        mav.addObject("gestures", Gestures.getAll());
-        return mav;
+        return pageBuilder.builder()
+                .username(user.getUsername())
+                .pageTitle(PageTitles.SCENARIO_PAGE.getPageTitle())
+                .fragment(PageTitles.SCENARIO_PAGE.getFragment())
+                .gestures(Gestures.getAll())
+                .build();
     }
 
 }

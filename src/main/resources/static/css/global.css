@@ -140,9 +140,24 @@ body {
     background-color: #FFFFFF;
     display: flex;
     height: 8%;
-    padding-right: 24px;
+    padding:0 24px;
+    position: relative;
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
+.alert-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: red;
+    animation: blink 1s infinite;
+}
 .main-content .content {
     display: flex;
     flex-direction: column;
@@ -160,7 +175,6 @@ body {
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
-    margin-left: 34px;
 }
 
 /* === Buttons === */
@@ -232,9 +246,6 @@ body {
     font-weight: 500;
     margin-top: 20px;
 }
-
-
-
 
 /* Стили для модального окна */
 .modal-dialog {
@@ -325,3 +336,27 @@ body {
 }
 
 
+@media only screen and (min-width: 1024px) and (max-width: 1112px) {
+    .page-container {
+        width: 100%;
+    }
+    .page-sidebar {
+        background-color: var(--regular-color);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        gap: 24px;
+        height: 100%;
+        padding: 0 12px 0 12px;
+        width: 20%;
+    }
+    .page-sidebar .menu span {
+        color: #FFF;
+        font-family: var(--font-heading), serif;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 700;
+    }
+
+
+}

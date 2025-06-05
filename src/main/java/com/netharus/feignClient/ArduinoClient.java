@@ -19,4 +19,10 @@ public interface ArduinoClient {
 
     @GetMapping("/test")
     ArduinoResponseDto test();
+
+    @PostMapping("/emergency/activate")
+    ArduinoResponseDto emergencyStop();
+
+    @PostMapping("/emergency/deactivate")
+    ArduinoResponseDto emergencyResume();
 }

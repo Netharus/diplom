@@ -1,5 +1,6 @@
 package com.netharus.controller;
 
+import com.netharus.controller.utilityForControllers.PageBuilder;
 import com.netharus.service.EventService;
 import com.netharus.service.UserService;
 import com.netharus.stringConstants.PageTitles;
@@ -23,20 +24,18 @@ public class HistoryController {
 
     private final EventService eventService;
     private final UserService userService;
+    private final PageBuilder pageBuilder;
 
     @GetMapping
     public ModelAndView history(@PageableDefault(sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable,
                                 @AuthenticationPrincipal UserDetails user) {
-        ModelAndView mav = new ModelAndView("homePage");
-        mav.addAllObjects(Map.of("username", user.getUsername(),
-                "pageTitle", PageTitles.HISTORY_PAGE.getPageTitle(),
-                "fragment", PageTitles.HISTORY_PAGE.getFragment(),
-                "pageContainer", eventService
-                        .getPageContainer(pageable, userService.findByUsername(user
-                                        .getUsername())
-                                .getId()))
-        );
+        Long userId = userService.findByUsername(user.getUsername()).getId();
 
-        return mav;
+        return pageBuilder.builder()
+                .username(user.getUsername())
+                .pageTitle(PageTitles.HISTORY_PAGE.getPageTitle())
+                .fragment(PageTitles.HISTORY_PAGE.getFragment())
+                .pageContainer(eventService.getPageContainer(pageable, userId))
+                .build();
     }
 }

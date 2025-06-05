@@ -80,9 +80,117 @@
     <div class="main-content">
         <div class="header">
             <span th:text="${pageTitle}"></span>
+            <div class="alert-text" id="emergencyMessage" style="display: none;">
+                ⚠️ ЭКСТРЕННАЯ ОСТАНОВКА АКТИВИРОВАНА ⚠️
+            </div>
         </div>
         <div class="content">
             <div th:replace="~{fragments/fragments::__${fragment}__}"></div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="emergencyFlag" th:value="${emergencyStopActive}" />
+<script>
+    function getButtonsToDisable() {
+        const gestureButtons = document.querySelectorAll(".gesture-button");
+        const otherButtons = [
+            document.getElementById("exportButton"),
+            document.getElementById("importButton"),
+            document.getElementById("inputButton")
+        ].filter(Boolean);
+
+        return [...gestureButtons, ...otherButtons];
+    }
+
+    function activateEmergencyMode() {
+        $('#emergencyMessage').show();
+
+        const buttonsToDisable = getButtonsToDisable();
+        buttonsToDisable.forEach(button => {
+            button.disabled = true;
+            button.classList.remove("btn-outline-primary", "btn-outline-success");
+            button.classList.add("btn-secondary");
+        });
+
+        $('#emergencyStopButton').hide();
+        $('#resumeSystemButton').show();
+    }
+
+    function deactivateEmergencyMode() {
+        $('#emergencyMessage').hide();
+
+        const buttonsToDisable = getButtonsToDisable();
+        buttonsToDisable.forEach(button => {
+            button.disabled = false;
+            button.classList.remove("btn-secondary");
+
+            if (!button.classList.contains("gesture-button")) {
+                button.classList.add("btn-outline-primary");
+            }
+
+            if (button.id === "inputButton") {
+                button.classList.add("btn-outline-success");
+            }
+        });
+
+        $('#resumeSystemButton').hide();
+        $('#emergencyStopButton').show();
+    }
+
+    $(document).ready(function () {
+        const emergencyFlag = $('#emergencyFlag').val();
+        if (emergencyFlag === 'true') {
+            activateEmergencyMode();
+        }
+
+        $('#emergencyStopButton').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/api/emergency/activate',
+                success: function (response) {
+                    console.log(response.message);
+                    activateEmergencyMode();
+                },
+                error: function () {
+                    alert('Ошибка при активации экстренной остановки');
+                }
+            });
+        });
+
+        $('#resumeSystemButton').click(function () {
+            $('#resumeConfirmationModal').modal('show');
+        });
+
+        $('#confirmResumeButton').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/api/emergency/deactivate',
+                success: function (response) {
+                    console.log(response.message);
+                    deactivateEmergencyMode();
+                    $('#resumeConfirmationModal').modal('hide');
+                },
+                error: function () {
+                    alert('Ошибка при деактивации экстренной остановки');
+                }
+            });
+        });
+    });
+</script>
+<div class="modal fade" id="resumeConfirmationModal" tabindex="-1" aria-labelledby="resumeConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="resumeConfirmationModalLabel">Подтверждение запуска</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                Вы проверили систему. Уверены, что хотите произвести запуск?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                <button type="button" class="btn btn-success" id="confirmResumeButton">Запустить</button>
+            </div>
         </div>
     </div>
 </div>

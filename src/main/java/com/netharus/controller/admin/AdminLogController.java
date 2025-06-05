@@ -1,5 +1,7 @@
 package com.netharus.controller.admin;
 
+import com.netharus.controller.utilityForControllers.PageBuilder;
+import com.netharus.lock.EmergencyStop;
 import com.netharus.service.LogService;
 import com.netharus.stringConstants.PageTitles;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +28,17 @@ import java.util.Map;
 public class AdminLogController {
 
     private final LogService logService;
+    private final PageBuilder pageBuilder;
 
     @GetMapping()
-    public ModelAndView users(@PageableDefault(sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable,
+    public ModelAndView logs(@PageableDefault(sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable,
                               @RequestParam(defaultValue = "") String keyword,
                               @AuthenticationPrincipal UserDetails user) {
-        ModelAndView mav = new ModelAndView("homePage");
-        mav.addAllObjects(Map.of("username", user.getUsername(),
-                        "pageTitle", PageTitles.LOGS_PAGE.getPageTitle(),
-                        "fragment", PageTitles.LOGS_PAGE.getFragment(),
-                        "pageContainer", logService.getPageContainer(pageable, keyword)
-                )
-        );
-        return mav;
+        return pageBuilder.builder()
+                .username(user.getUsername())
+                .pageTitle(PageTitles.LOGS_PAGE.getPageTitle())
+                .fragment(PageTitles.LOGS_PAGE.getFragment())
+                .pageContainer(logService.getPageContainer(pageable, keyword))
+                .build();
     }
 }

@@ -43,3 +43,50 @@
     background-color: var(--regular-color);
     color: white;
 }
+@media only screen and (min-width: 1024px) and (max-width: 1112px) {
+    .gesture-box {
+        display: flex;
+        flex-direction: column;
+        gap:15px;
+        align-items: center;
+    }
+
+    .gestures {
+        display: flex;
+        gap: 15px;
+        width: 60%;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .gesture-button {
+        border: 0;
+        border-radius: 15px;
+        width: 90px;
+        height: 90px;
+        background-color: var(--success-color);
+    }
+    .last-events {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 70%;
+    }
+    .event-table {
+        margin: 0;
+        width: 100%;
+    }
+    .event-table thead {
+        background-color: var(--regular-color);
+        color: white;
+    }
+
+    .topic-name{
+        font-size: 26px;
+    }
+
+    .event-table {
+        font-size: 13px;
+    }
+}

@@ -4,3 +4,27 @@
 td{
     width: 50%
 }
+@media only screen and (min-width: 1024px) and (max-width: 1112px) {
+    .history-container table {
+        font-size: 13px;
+    }
+    .history-container table td:nth-child(1),
+    .history-container table th:nth-child(1) {
+        width: 18%;
+    }
+
+    .history-container table td:nth-child(2),
+    .history-container table th:nth-child(2) {
+        width: 82%;
+    }
+
+    .history-container table td:nth-child(1),
+    .history-container table th:nth-child(1) {
+        padding: 4px;
+    }
+
+    .history-container table td:nth-child(2),
+    .history-container table th:nth-child(2) {
+        padding: 4px;
+    }
+}

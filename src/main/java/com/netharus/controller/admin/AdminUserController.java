@@ -1,5 +1,7 @@
 package com.netharus.controller.admin;
 
+import com.netharus.controller.utilityForControllers.PageBuilder;
+import com.netharus.lock.EmergencyStop;
 import com.netharus.service.UserService;
 import com.netharus.stringConstants.PageTitles;
 import lombok.RequiredArgsConstructor;
@@ -21,22 +23,21 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/admin/users")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminUserController {
 
     private final UserService userService;
+    private final PageBuilder pageBuilder;
 
     @GetMapping()
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView users(@PageableDefault(sort = "active") Pageable pageable,
                               @RequestParam(defaultValue = "") String keyword,
                               @AuthenticationPrincipal UserDetails user) {
-        ModelAndView mav = new ModelAndView("homePage");
-        mav.addAllObjects(Map.of("username", user.getUsername(),
-                        "pageTitle", PageTitles.USERS_PAGE.getPageTitle(),
-                        "fragment", PageTitles.USERS_PAGE.getFragment(),
-                        "pageContainer", userService.getPageContainer(pageable, keyword)
-                )
-        );
-        return mav;
+        return pageBuilder.builder()
+                .username(user.getUsername())
+                .pageTitle(PageTitles.USERS_PAGE.getPageTitle())
+                .fragment(PageTitles.USERS_PAGE.getFragment())
+                .pageContainer(userService.getPageContainer(pageable, keyword))
+                .build();
     }
 }
