@@ -1,7 +1,6 @@
 package com.netharus.controller.admin;
 
 import com.netharus.controller.utilityForControllers.PageBuilder;
-import com.netharus.lock.EmergencyStop;
 import com.netharus.service.LogService;
 import com.netharus.stringConstants.PageTitles;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Map;
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -32,8 +29,8 @@ public class AdminLogController {
 
     @GetMapping()
     public ModelAndView logs(@PageableDefault(sort = "dateTime", direction = Sort.Direction.DESC) Pageable pageable,
-                              @RequestParam(defaultValue = "") String keyword,
-                              @AuthenticationPrincipal UserDetails user) {
+                             @RequestParam(defaultValue = "") String keyword,
+                             @AuthenticationPrincipal UserDetails user) {
         return pageBuilder.builder()
                 .username(user.getUsername())
                 .pageTitle(PageTitles.LOGS_PAGE.getPageTitle())

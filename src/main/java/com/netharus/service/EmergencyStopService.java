@@ -6,6 +6,7 @@ import com.netharus.domain.dto.response.ArduinoResponseDto;
 public interface EmergencyStopService {
 
     ArduinoResponseDto deactivateEmergencyStop(User user);
+
     ArduinoResponseDto activateEmergencyStop(User user);
 
 }

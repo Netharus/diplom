@@ -16,7 +16,7 @@ public enum Gestures {
     PALM_UP("Ладонь вверх", "PalmUp", 3),
     ROCK_ON("Рок-н-ролл", "RockOn", 4),
     ONE_FINGER_UP("Один палец вверх", "OneFingerUp", 5),
-    TWO_FINGERS_UP("Два пальца вверх", "TwoFingersUp", 6),
+    OK("ОК", "Ok", 6),
     CALL("Звонок", "Call", 7),
     VICTORY("Победа", "Victory", 8);
 

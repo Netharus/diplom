@@ -49,7 +49,7 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .permitAll()
                         .usernameParameter("username")
-                        .defaultSuccessUrl("/home",true)
+                        .defaultSuccessUrl("/home", true)
                 )
                 .logout((logout) ->
                         logout.deleteCookies("JSESSIONID")

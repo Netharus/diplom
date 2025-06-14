@@ -29,7 +29,7 @@
             th:data-id="${gesture.id}"
             th:data-name="${gesture.name}"
     >
-        <img th:src="@{'/images/' + ${gesture.name} + '.png'}" th:alt="${gesture.name}" width="100"/>
+        <img th:src="@{'/images/' + ${gesture.name} + '.png'}" th:alt="${gesture.name}" width="46px" height="auto"/>
     </button>
 </div>
 
@@ -48,7 +48,7 @@
                             th:data-title="${gesture.title}"
                             th:data-name="${gesture.name}"
                     >
-                        <img th:src="@{${'/images/'+gesture.name + '.png'}}" th:alt="${gesture.name}"/>
+                        <img th:src="@{${'/images/'+gesture.name + '.png'}}" width="auto" height="46px" th:alt="${gesture.name}"/>
                     </button>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                 <div th:each="gesture : ${gestures}">
                     <button class="gesture-button" th:value="${gesture.id}">
                         <img th:src="@{${'/images/'+gesture.name + '.png'}}" th:alt="${gesture.name}"
-                             th:value="${gesture.id}"/>
+                             th:value="${gesture.id}" width="auto" height="46px"/>
                     </button>
                 </div>
             </div>

@@ -53,6 +53,10 @@
     position: relative;
     overflow: hidden;
 }
+.gesture-scenario-box img {
+    width: auto;
+    height: 46px;
+}
 .arrow-right {
     width: 0;
     height: 0;

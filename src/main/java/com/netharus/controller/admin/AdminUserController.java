@@ -1,7 +1,6 @@
 package com.netharus.controller.admin;
 
 import com.netharus.controller.utilityForControllers.PageBuilder;
-import com.netharus.lock.EmergencyStop;
 import com.netharus.service.UserService;
 import com.netharus.stringConstants.PageTitles;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
